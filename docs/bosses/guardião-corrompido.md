@@ -95,31 +95,46 @@ Aos 30% HP o boss entra em fúria. A lava sobe mais rápido e ele fica visivelme
 **Derrota:**
 Ao morrer, o boss explode em uma grande liberação de almas (efeito visual bonito) e dropa o loot + almas para o sistema de recuperação.
 
-## Recompensas
+## Recompensas e Loot
 
-- **Loot Principal:**
-  - Fragmento do Véu (material de crafting raro)
-  - Arma ou acessório com stats de Inteligência + Sabedoria
-  - Chance de drop de item com affixes de "Corrupção"
+### Drops Principais (ItemsAdder)
 
-- **Sistema de Almas:**
-  - Grande quantidade de Ecos de Alma (para o sistema de morte estilo Souls)
+| Item | Chance | Quantidade | Descrição |
+|------|--------|------------|---------|
+| **Lâmina do Véu Corrompido** | 35% | 1 | Espada híbrida que escala com **Força + Inteligência**. Causa dano melee + chance de Queimadura de Alma (DoT). |
+| **Elmo do Guardião Corrompido** | 40% | 1 | Capacete tanque com alto bônus de **Constituição** e resistência mágica. |
+| **Anel da Alma Presa** | 25% | 1 | Acessório que dá bônus de **Inteligência + Sabedoria** e dano extra contra mobs corrompidos. |
+| **Fragmento do Véu Rasgado** | 80% | 1~3 | Material raro de crafting. Usado para forjar equipamentos de tiers superiores. |
 
-- **Experiência:** Alta (bom para subir de nível rápido)
+### Integração com Sistema de Stats
+
+Todos os itens acima têm **requisitos de atributo** e **bônus escaláveis** com o sistema de AuraSkills:
+
+- **Lâmina do Véu Corrompido** → Requer Força 12 + Inteligência 10
+- **Elmo do Guardião Corrompido** → Requer Constituição 14
+
+### Sistema de Almas (Estilo Souls)
+
+- Grande quantidade de **Ecos de Alma** (para o sistema de morte com risco)
+- O boss dropa almas no local da morte que podem ser recuperadas
+
+### Experiência
+
+Alta quantidade de XP (bom para subir de nível rápido no early-mid game).
 
 ## Dicas de Combate
 
 - Fase 1: Foque em adds quando aparecem e aprenda o timing do Golpe Pesado.
 - Fase 2: Use os pilares como cobertura. Não fique no centro quando a lava subir.
 - Fase 3: Priorize interrupção da Tempestade de Almas destruindo pilares ou causando muito dano no boss.
-- Builds híridas funcionam bem (Força + Inteligência ou Destreza + Sabedoria).
+- Builds híbridas funcionam muito bem (Força + Inteligência ou Destreza + Sabedoria).
 
 ## Status Base (MythicMobs)
 
-- **Vida:** 850 ~ 1100 (escalável)
-- **Dano:** 22 ~ 35
-- **Defesa:** Moderada
-- **Velocidade:** Aumenta nas fases 2 e 3
+- **Vida:** 950
+- **Dano:** 28
+- **Defesa:** 18
+- **Velocidade:** 0.25 (aumenta nas fases 2 e 3)
 
 ---
 
