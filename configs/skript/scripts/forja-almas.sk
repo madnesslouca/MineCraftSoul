@@ -1,0 +1,49 @@
+# ============================================
+# FORJA DAS ALMAS - Custo de Almas em Crafting
+# ============================================
+#
+# Este script intercepta o crafting de itens de alto tier
+# e exige que o jogador tenha Almas suficientes.
+#
+# Requer: Skript + PlaceholderAPI + ItemsAdder
+# ============================================
+
+options:
+  prefix: &5[Forja das Almas] &
+
+# Variável de Almas (deve bater com soul-economy.sk)
+variable {almas::%player's uuid%} = 0
+
+# ============================================
+# LISTENER DE CRAFTING
+# ============================================
+on craft:
+  # Verifica se o item craftado é um dos nossos itens de alto tier
+  if event-item is minecraf tsoul:espada_veu_rasgado:
+    set {_custo} to 450
+    set {_item} to "Espada do Véu Rasgado"
+  else if event-item is minecraf tsoul:peitoral_eco_eterno:
+    set {_custo} to 600
+    set {_item} to "Peitoral do Eco Eterno"
+  else if event-item is minecraf tsoul:talisma_alma_livre:
+    set {_custo} to 350
+    set {_item} to "Talismã da Alma Livre"
+  else:
+    stop
+
+  # Pega a quantidade de Almas do jogador
+  set {_almas} to {almas::%player's uuid%}
+
+  if {_almas} < {_custo}:
+    cancel event
+    send "{@prefix}&cVocê precisa de &e%{_custo}% Almas &cpara forjar este item!"
+    send "{@prefix}&7Você tem apenas &e%{_almas}% Almas&7."
+    stop
+
+  # Tem Almas suficientes - consome
+  subtract {_custo} from {almas::%player's uuid%}
+  send "{@prefix}&aVocê forjou &e%{_item}% &acom sucesso!"
+  send "{@prefix}&7Foram gastas &c%{_custo}% Almas&7."
+
+  # Opcional: dar feedback visual
+  play sound "entity.player.levelup" at player with volume 0.8 pitch 1.2

@@ -1,0 +1,95 @@
+info:
+  namespace: minecraf tsoul
+  version: "1.0"
+
+items:
+
+  # ============================================
+  # ITENS DE ALTO TIER - FORJA DO VÉU
+  # ============================================
+
+  espada_veu_rasgado:
+    display_name: "&5&lEspada do Véu Rasgado"
+    material: NETHERITE_SWORD
+    lore:
+      - "&7Uma lâmina forjada com a essência corrupta do Véu."
+      - "&7Sente o poder das almas presas dentro dela."
+      - ""
+      - "&c▪ Requisitos: &fForça 18 + Inteligência 14"
+      - "&c▪ Custo de Almas: &f450"
+      - "&c▪ Custo de Fragmentos: &f5x Fragmento do Véu Rasgado"
+      - ""
+      - "&7Dano Físico: &c14"
+      - "&7Dano Mágico Adicional: &d+6"
+      - "&7Chance de Queimadura de Alma: &c28%"
+      - "&8(Escala com Força + Inteligência)"
+    attribute_modifiers:
+      GENERIC_ATTACK_DAMAGE: 14
+    enchants:
+      sharpness: 5
+      fire_aspect: 2
+    item_flags:
+      - HIDE_ATTRIBUTES
+    # Receita básica (Fragmentos). O custo de Almas é controlado via Skript
+    recipes:
+      shapeless:
+        - result_amount: 1
+          ingredients:
+            - minecraf tsoul:fragmento_veu_rasgado * 5
+
+  peitoral_eco_eterno:
+    display_name: "&2&lPeitoral do Eco Eterno"
+    material: NETHERITE_CHESTPLATE
+    lore:
+      - "&7Forjado com a essência de ecos de guerreiros antigos."
+      - "&7Oferece proteção contra a corrupção do Véu."
+      - ""
+      - "&c▪ Requisitos: &fConstituição 20 + Sabedoria 12"
+      - "&c▪ Custo de Almas: &f600"
+      - "&c▪ Custo de Fragmentos: &f8x Fragmento do Véu Rasgado"
+      - ""
+      - "&7Vida Extra: &a+65"
+      - "&7Redução de Dano Mágico: &d15%"
+      - "&7Regeneração de Vida em Combate: &a+2.5 por segundo"
+      - "&8(Escala com Constituição + Sabedoria)"
+    attribute_modifiers:
+      GENERIC_ARMOR: 10
+      GENERIC_ARMOR_TOUGHNESS: 4
+      GENERIC_MAX_HEALTH: 13  # +65 vida (5 corações)
+    enchants:
+      protection: 5
+      unbreaking: 4
+    item_flags:
+      - HIDE_ATTRIBUTES
+    recipes:
+      shaped:
+        - result_amount: 1
+          shape:
+            - "F F F"
+            - "F C F"
+            - "F F F"
+          ingredients:
+            F: minecraf tsoul:fragmento_veu_rasgado
+            C: NETHERITE_CHESTPLATE
+
+  talisma_alma_livre:
+    display_name: "&d&lTalismã da Alma Livre"
+    material: NETHER_STAR
+    lore:
+      - "&7Um talismã que permite ao portador canalizar"
+      - "&7almas de forma mais eficiente."
+      - ""
+      - "&c▪ Requisitos: &fInteligência 16 + Destreza 14"
+      - "&c▪ Custo de Almas: &f350"
+      - "&c▪ Custo de Fragmentos: &f3x Fragmento do Véu Rasgado"
+      - ""
+      - "&7Bônus de Mana: &b+45"
+      - "&7Chance de Crítico Mágico: &d+8%"
+      - "&7Redução de Custo de Mana em Skills: &a12%"
+      - "&8(Escala com Inteligência + Destreza)"
+    recipes:
+      shapeless:
+        - result_amount: 1
+          ingredients:
+            - minecraf tsoul:fragmento_veu_rasgado * 3
+            - NETHER_STAR * 1
