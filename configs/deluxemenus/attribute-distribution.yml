@@ -1,0 +1,145 @@
+menu_title: '&8▶ Distribuição de Atributos'
+open_command: atributos
+size: 54
+
+items:
+
+  header:
+    material: NETHER_STAR
+    slot: 4
+    display_name: '&6Seus Pontos de Atributo'
+    lore:
+      - '&7Nível atual: &a%player_level%'
+      - '&7Pontos disponíveis: &a%auraskills_attribute_points%'
+      - ''
+      - '&7Distribua seus pontos livremente!'
+      - '&7Sem travas de classe — crie sua build!'
+      - ''
+      - '&8Menu atualizado automaticamente'
+
+  forca:
+    material: DIAMOND_SWORD
+    slot: 19
+    display_name: '&c&lFORÇA'
+    lore:
+      - '&7Valor atual: &c%auraskills_strength%'
+      - ''
+      - '&7Aumenta:'
+      - '&8• Dano melee'
+      - '&8• Capacidade de carga'
+      - '&8• Requisitos de armas pesadas'
+      - ''
+      - '&eClique esquerdo para +1'
+      - '&cCusto: 1 Ponto de Atributo'
+    left_click_commands:
+      - '[console] auraskills addattribute %player_name% strength 1'
+      - '[message] &a+1 Força adicionada!'
+      - '[refresh]'
+    view_requirement:
+      expression: '%auraskills_attribute_points% >= 1'
+
+  constituicao:
+    material: SHIELD
+    slot: 21
+    display_name: '&2&lCONSTITUIÇÃO'
+    lore:
+      - '&7Valor atual: &2%auraskills_constitution%'
+      - ''
+      - '&7Aumenta:'
+      - '&8• Vida máxima'
+      - '&8• Regeneração'
+      - '&8• Resistência física'
+      - ''
+      - '&eClique esquerdo para +1'
+      - '&cCusto: 1 Ponto de Atributo'
+    left_click_commands:
+      - '[console] auraskills addattribute %player_name% constitution 1'
+      - '[message] &a+1 Constituição adicionada!'
+      - '[refresh]'
+    view_requirement:
+      expression: '%auraskills_attribute_points% >= 1'
+
+  destreza:
+    material: BOW
+    slot: 23
+    display_name: '&b&lDESTREZA'
+    lore:
+      - '&7Valor atual: &b%auraskills_dexterity%'
+      - ''
+      - '&7Aumenta:'
+      - '&8• Velocidade de ataque'
+      - '&8• Chance de crítico'
+      - '&8• Dano ranged'
+      - '&8• Esquiva'
+      - ''
+      - '&eClique esquerdo para +1'
+      - '&cCusto: 1 Ponto de Atributo'
+    left_click_commands:
+      - '[console] auraskills addattribute %player_name% dexterity 1'
+      - '[message] &a+1 Destreza adicionada!'
+      - '[refresh]'
+    view_requirement:
+      expression: '%auraskills_attribute_points% >= 1'
+
+  inteligencia:
+    material: ENCHANTED_BOOK
+    slot: 25
+    display_name: '&d&lINTELIGÊNCIA'
+    lore:
+      - '&7Valor atual: &d%auraskills_intelligence%'
+      - ''
+      - '&7Aumenta:'
+      - '&8• Dano mágico'
+      - '&8• Mana máxima'
+      - '&8• Potência de skills'
+      - ''
+      - '&eClique esquerdo para +1'
+      - '&cCusto: 1 Ponto de Atributo'
+    left_click_commands:
+      - '[console] auraskills addattribute %player_name% intelligence 1'
+      - '[message] &a+1 Inteligência adicionada!'
+      - '[refresh]'
+    view_requirement:
+      expression: '%auraskills_attribute_points% >= 1'
+
+  sabedoria:
+    material: EXPERIENCE_BOTTLE
+    slot: 40
+    display_name: '&5&lSABEDORIA'
+    lore:
+      - '&7Valor atual: &5%auraskills_wisdom%'
+      - ''
+      - '&7Aumenta:'
+      - '&8• Resistência mágica'
+      - '&8• Cura e suporte'
+      - '&8• Eficiência de skills'
+      - ''
+      - '&eClique esquerdo para +1'
+      - '&cCusto: 1 Ponto de Atributo'
+    left_click_commands:
+      - '[console] auraskills addattribute %player_name% wisdom 1'
+      - '[message] &a+1 Sabedoria adicionada!'
+      - '[refresh]'
+    view_requirement:
+      expression: '%auraskills_attribute_points% >= 1'
+
+  instructions:
+    material: PAPER
+    slot: 49
+    display_name: '&7Como funciona?'
+    lore:
+      - '&8• Cada level up dá pontos de atributo'
+      - '&8• Distribua livremente entre os 5 stats'
+      - '&8• Sem classes fixas — sua build é única!'
+      - '&8• Skills escalam com combinações de stats'
+      - ''
+      - '&7Ex: Força + Inteligência = Lâmina Flamejante'
+
+  close:
+    material: BARRIER
+    slot: 53
+    display_name: '&cFechar Menu'
+    lore:
+      - '&7Clique para fechar'
+    left_click_commands:
+      - '[close]'

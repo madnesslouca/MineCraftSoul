@@ -1,37 +1,42 @@
-# Configuração do AuraSkills - MineCraftSoul
+# Configuração do AuraSkills
 
-## Estrutura de Pastas
+Este diretório contém as configurações do **AuraSkills** para o sistema de progressão RPG classless do MineCraftSoul.
 
-```
-configs/auraskills/
-├── README.md
-├── stats.yml              # Definição dos 5 atributos principais
-└── skills/                # Skills individuais (uma por arquivo)
-    ├── golpe-brutal.yml
-    ├── lamina-flamejante.yml
-    ├── tiro-preciso.yml
-    └── investida-brutal.yml
-```
+## Arquivos
 
-## Como usar essas skills
+- `stats.yml` — Definição dos 5 stats principais (Força, Constituição, Destreza, Inteligência, Sabedoria)
+- `skills/` — Skills que escalam com combinações de atributos
 
-1. Coloque os arquivos `.yml` da pasta `skills/` dentro da pasta `plugins/AuraSkills/skills/` do seu servidor.
-2. Use o comando `/auraskills reload` ou reinicie o servidor.
-3. As skills aparecerão no menu de skills do AuraSkills (ou você pode dar elas via comando).
+## Como o sistema funciona
 
-## Filosofia das Skills Combinadas
+- Jogador sobe de nível normalmente
+- A cada level up recebe **pontos de atributo** (distribuição livre)
+- Não existe trava de classe
+- Skills podem escalar com 2 ou mais stats ao mesmo tempo
 
-Todas as skills aqui foram criadas para escalar com **múltiplos atributos** ao mesmo tempo. Isso permite que o jogador crie builds híbridas e criativas sem ficar preso a uma classe.
+## Menu de Distribuição de Pontos
 
-Exemplos:
-- **Golpe Brutal** → Força + Destreza (melee físico com chance de stun)
-- **Lâmina Flamejante** → Força + Inteligência (dano físico + fogo)
-- **Tiro Preciso** → Destreza + Inteligência (ranged mágico)
-- **Investida Brutal** → Constituição + Força (tank + burst + sustain)
+O menu principal para o jogador distribuir pontos está em:
 
-## Próximos Passos
+**`configs/deluxemenus/attribute-distribution.yml`**
 
-- Criar mais 4~6 skills combinadas
-- Adicionar skills de suporte / cura / utility
-- Criar skills épicas de tier alto (level 30+)
-- Integrar com MythicMobs (bosses que reagem a skills do player)
+- Comando para abrir: **`/atributos`**
+- Usa DeluxeMenus + PlaceholderAPI
+- Atualiza automaticamente após cada aumento
+
+## Placeholders importantes (PlaceholderAPI)
+
+- `%auraskills_strength%`
+- `%auraskills_constitution%`
+- `%auraskills_dexterity%`
+- `%auraskills_intelligence%`
+- `%auraskills_wisdom%`
+- `%auraskills_attribute_points%`
+- `%player_level%`
+
+## Próximos passos
+
+- Testar as skills combinadas no servidor
+- Ajustar multiplicadores de dano
+- Criar mais skills (suporte, área, ultimate)
+- Integrar com o primeiro boss (MythicMobs)
