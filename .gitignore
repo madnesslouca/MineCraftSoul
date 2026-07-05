@@ -1,0 +1,25 @@
+# Minecraft Server Files
+world/
+world_nether/
+world_the_end/
+logs/
+plugins/
+!plugins/.gitkeep
+cache/
+*.jar
+*.log
+*.tmp
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.env
+.env*
+secrets/
