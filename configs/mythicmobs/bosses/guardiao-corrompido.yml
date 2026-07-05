@@ -130,6 +130,13 @@ GuardiãoCorrompido:
       - message{&cUm Eco do Guardião surge!} @Self
       - effect{ particles{type=SOUL, amount=100} radius=5 } @Self
 
+  # ==================== DROPS (ItemsAdder) ====================
+  Drops:
+    - item{LaminaVeuCorrompido} amount=1 chance=0.35
+    - item{ElmoGuardiaoCorrompido} amount=1 chance=0.40
+    - item{AnelAlmaPresa} amount=1 chance=0.25
+    - item{FragmentoVeuRasgado} amount=1~3 chance=0.80
+
 # ==================== MOBS SECUNDÁRIOS ====================
 
 AlmaCorrompida:
