@@ -1,0 +1,44 @@
+# ============================================
+# TIRO PRECISO - Skill Combinada
+# Escala com: Destreza + Inteligência
+# ============================================
+
+skill:
+  id: tiro-preciso
+  name: "&bTiro Preciso"
+  description:
+    - "&7Dispara um projétil arcano preciso."
+    - "&7Dano alto baseado em Destreza + Inteligência."
+    - "&7Pode atravessar inimigos ou ter chance de crítico aumentada."
+
+  max-level: 20
+  enabled: true
+
+  mana-cost: "12 + (level * 1.8)"
+  cooldown: "(6 - (level * 0.15)) * 20"
+
+  triggers:
+    - type: left_click
+      conditions:
+        - type: has_item_in_hand
+          material: BOW, CROSSBOW
+
+  effects:
+    - type: projectile
+      projectile: ARROW
+      damage: "(player_dexterity * 3.5) + (player_intelligence * 2.1) + (level * 6)"
+      speed: 2.5
+      gravity: false
+      
+    - type: chance
+      chance: "(player_dexterity * 1.2) + 20"
+      effects:
+        - type: damage
+          value: "player_dexterity * 1.5"
+          damage-type: PHYSICAL
+
+  messages:
+    use: "&bVocê dispara um Tiro Preciso!"
+
+  requirements:
+    dexterity: 18

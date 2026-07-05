@@ -1,0 +1,48 @@
+# ============================================
+# GOLPE BRUTAL - Skill Combinada
+# Escala com: Força + Destreza
+# ============================================
+
+skill:
+  id: golpe-brutal
+  name: "&cGolpe Brutal"
+  description:
+    - "&7Um golpe poderoso que combina força bruta com precisão."
+    - "&7Causa alto dano físico baseado em Força + Destreza."
+    - "&7Pequena chance de atordoar o alvo."
+
+  max-level: 20
+  enabled: true
+
+  # Custo e Cooldown
+  mana-cost: "10 + (level * 1.5)"
+  cooldown: "(8 - (level * 0.2)) * 20"   # em ticks (20 ticks = 1 segundo)
+
+  # Como o jogador ativa
+  triggers:
+    - type: left_click
+      conditions:
+        - type: has_item_in_hand
+          material: DIAMOND_SWORD, NETHERITE_SWORD, IRON_SWORD
+
+  # Efeitos da skill
+  effects:
+    - type: damage
+      value: "(player_strength * 2.8) + (player_dexterity * 1.4) + (level * 4)"
+      damage-type: PHYSICAL
+      
+    - type: potion_effect
+      effect: SLOW
+      duration: "(level * 4) + 20"
+      amplifier: 0
+      chance: "(player_dexterity * 0.8) + 15"   # Chance de stun baseada em Destreza
+      target: target
+
+  # Mensagens
+  messages:
+    use: "&cVocê desfere um Golpe Brutal!"
+    hit: "&7O golpe acertou com força devastadora!"
+
+  # Requisitos de atributo (exemplo)
+  requirements:
+    strength: 15

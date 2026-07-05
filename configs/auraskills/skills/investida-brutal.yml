@@ -1,0 +1,50 @@
+# ============================================
+# INVESTIDA BRUTAL - Skill Combinada
+# Escala com: Constituição + Força
+# ============================================
+
+skill:
+  id: investida-brutal
+  name: "&4Investida Brutal"
+  description:
+    - "&7Avança rapidamente contra o inimigo."
+    - "&7Causa dano e empurra o alvo, ganhando vida temporária baseada na Constituição."
+
+  max-level: 15
+  enabled: true
+
+  mana-cost: "20 + (level * 1)"
+  cooldown: "18 * 20"
+
+  triggers:
+    - type: left_click
+      conditions:
+        - type: has_item_in_hand
+          material: NETHERITE_AXE, DIAMOND_AXE, IRON_AXE
+
+  effects:
+    - type: dash
+      distance: "3 + (level * 0.15)"
+      speed: 1.8
+
+    - type: damage
+      value: "(player_constitution * 1.6) + (player_strength * 2.4) + (level * 7)"
+      damage-type: PHYSICAL
+      target: target
+
+    - type: heal
+      value: "player_constitution * 0.8"
+      target: self
+
+    - type: potion_effect
+      effect: ABSORPTION
+      duration: "(level * 10) + 60"
+      amplifier: "level / 4"
+      target: self
+
+  messages:
+    use: "&4Você avança com uma Investida Brutal!"
+
+  requirements:
+    constitution: 20
+    strength: 15
