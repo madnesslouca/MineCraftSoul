@@ -1,5 +1,5 @@
 # ============================================
-# LÂMINA FLAMEJANTE - Skill Combinada
+# LÂMINA FLAMEJANTE - Skill Combinada (Balanceada D.1)
 # Escala com: Força + Inteligência
 # ============================================
 
@@ -10,12 +10,15 @@ skill:
     - "&7Envolva sua arma em chamas arcanas."
     - "&7Causa dano físico + dano de fogo ao longo do tempo."
     - "&7Escala com Força (dano base) + Inteligência (poder mágico)."
+    - "&8Requer: &cForça 8+ &7e &dInteligência 8+"
 
   max-level: 20
   enabled: true
 
-  mana-cost: "15 + (level * 2)"
-  cooldown: "12 * 20"
+  mana-cost: "14 + (level * 1.8)"
+  cooldown: "11 * 20"
+
+  level-requirement: 6
 
   triggers:
     - type: left_click
@@ -24,16 +27,14 @@ skill:
           material: DIAMOND_SWORD, NETHERITE_SWORD
 
   effects:
-    # Dano inicial físico + mágico
     - type: damage
-      value: "(player_strength * 2.2) + (player_intelligence * 1.8) + (level * 5)"
+      value: "(player_strength * 2.0) + (player_intelligence * 1.6) + (level * 4)"
       damage-type: PHYSICAL
 
-    # Dano de fogo por tempo (DoT)
     - type: damage_over_time
-      value: "(player_intelligence * 0.9) + (level * 1.5)"
+      value: "(player_intelligence * 0.85) + (level * 1.3)"
       damage-type: FIRE
-      duration: "(level * 8) + 40"     # ticks
+      duration: "(level * 6) + 30"
       interval: 20
       target: target
 
@@ -41,5 +42,5 @@ skill:
     use: "&6Sua lâmina se envolve em chamas!"
 
   requirements:
-    strength: 12
-    intelligence: 10
+    strength: 8
+    intelligence: 8

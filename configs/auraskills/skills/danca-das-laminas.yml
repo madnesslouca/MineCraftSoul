@@ -1,43 +1,39 @@
 # ============================================
-# DANÇA DAS LÂMINAS - Skill Combinada
+# DANÇA DAS LÂMINAS - Skill Combinada (Balanceada D.1)
 # Escala com: Destreza + Força
 # ============================================
 
 skill:
   id: danca-das-laminas
-  name: "&cDança das Lâminas"
+  name: "&eDança das Lâminas"
   description:
     - "&7Gira rapidamente atacando todos ao redor."
-    - "&7Múltiplos golpes em cone ou ao redor do jogador."
-    - "&7Ideal para builds agressivas de Destreza + Força."
+    - "&7Multi-hit em área."
+    - "&8Requer: &bDestreza 10+ &7e &cForça 8+"
 
   max-level: 18
   enabled: true
 
-  mana-cost: "18 + (level * 2)"
-  cooldown: "(14 - (level * 0.4)) * 20"
+  mana-cost: "20 + (level * 1.4)"
+  cooldown: "14 * 20"
+
+  level-requirement: 9
 
   triggers:
     - type: left_click
       conditions:
         - type: has_item_in_hand
-          material: NETHERITE_SWORD, DIAMOND_SWORD
+          material: DIAMOND_SWORD, NETHERITE_SWORD
 
   effects:
     - type: damage
-      value: "(player_dexterity * 2.5) + (player_strength * 2.0) + (level * 3.5)"
+      value: "(player_dexterity * 1.6) + (player_strength * 1.8) + (level * 2.8)"
       damage-type: PHYSICAL
-      radius: "3.5 + (level * 0.1)"
-      
-    - type: particle
-      particle: SWEEP_ATTACK
-      count: 15
-      radius: 4
+      radius: "3.5"
 
   messages:
-    use: "&cVocê executa a Dança das Lâminas!"
-    hit: "&7Inimigos ao redor são cortados!"
+    use: "&eVocê executa a Dança das Lâminas!"
 
   requirements:
-    dexterity: 18
-    strength: 15
+    dexterity: 10
+    strength: 8

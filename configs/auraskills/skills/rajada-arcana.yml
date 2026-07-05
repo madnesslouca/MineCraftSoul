@@ -1,5 +1,5 @@
 # ============================================
-# RAJADA ARCANA - Skill Combinada
+# RAJADA ARCANA - Skill Combinada (Balanceada D.1)
 # Escala com: Destreza + Inteligência
 # ============================================
 
@@ -9,37 +9,37 @@ skill:
   description:
     - "&7Dispara uma rajada de energia arcana."
     - "&7Causa dano mágico + chance de lentidão."
-    - "&7Excelente para builds híbridas de ranged + mágico."
+    - "&8Requer: &bDestreza 8+ &7e &dInteligência 10+"
 
   max-level: 20
   enabled: true
 
-  mana-cost: "12 + (level * 1.8)"
-  cooldown: "(6 - (level * 0.15)) * 20"
+  mana-cost: "13 + (level * 1.6)"
+  cooldown: "(8 - (level * 0.2)) * 20"
+
+  level-requirement: 6
 
   triggers:
-    - type: left_click
+    - type: right_click
       conditions:
         - type: has_item_in_hand
-          material: BOW, CROSSBOW, TRIDENT
+          material: BOW, CROSSBOW
 
   effects:
-    - type: projectile
-      damage: "(player_dexterity * 2.2) + (player_intelligence * 2.0) + (level * 4)"
+    - type: damage
+      value: "(player_dexterity * 1.8) + (player_intelligence * 2.0) + (level * 3.5)"
       damage-type: MAGIC
-      speed: 2.5
-      
+
     - type: potion_effect
       effect: SLOW
-      duration: "(level * 8) + 30"
+      duration: "(level * 4) + 20"
       amplifier: 1
-      chance: "(player_dexterity * 0.7) + 20"
+      chance: "(player_intelligence * 0.6) + 18"
       target: target
 
   messages:
     use: "&dVocê dispara uma Rajada Arcana!"
-    hit: "&7A energia arcana atinge o alvo!"
 
   requirements:
-    dexterity: 12
-    intelligence: 12
+    dexterity: 8
+    intelligence: 10
