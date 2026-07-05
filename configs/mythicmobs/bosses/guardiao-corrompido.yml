@@ -1,174 +1,183 @@
-# Guardião Corrompido - Boss Principal Tier 1
-# Catacumbas do Véu Rasgado - Andar 3
+# ============================================================
+# GUARDIÃO CORROMPIDO — Boss Principal Tier 1 (ARQUIVO DE MOBS)
+# Catacumbas do Véu Rasgado — Andar 3 (Arena Circular com pilares)
+# ------------------------------------------------------------
+# Balanceado para: grupo de 4 jogadores, nível 15~25.
+#
+# No servidor:
+#   - Este arquivo vai em:      plugins/MythicMobs/Mobs/
+#   - As metaskills ficam em:   plugins/MythicMobs/Skills/
+#     (ver configs/mythicmobs/skills/guardiao-corrompido-skills.yml)
+# O MythicMobs NÃO carrega metaskills definidas dentro de arquivo de mob —
+# por isso a separação.
+#
+# ATENÇÃO: o ID interno mudou de "GuardiãoCorrompido" para
+# "GuardiaoCorrompido" (sem acento). IDs internos com caractere especial
+# quebram comandos, placeholders e integrações em vários setups.
+# Spawn manual: /mm mobs spawn GuardiaoCorrompido <mundo>,<x>,<y>,<z>
+# ============================================================
 
-GuardiãoCorrompido:
+GuardiaoCorrompido:
   Type: WITHER_SKELETON
   Display: '&5&lGuardião Corrompido'
-  Health: 950
-  Damage: 28
-  Armor: 18
-  MovementSpeed: 0.25
-  PreventOtherDrops: true
-  PreventRandomEquipment: true
+  Health: 6500          # ~2,5 a 4 min de luta p/ 4 jogadores nv 15~25 (principal knob de tuning)
+  Damage: 14            # dano do auto-attack melee da IA
+  Armor: 12
+  MovementSpeed: 0.27
+  Faction: Corrompidos  # mesma facção dos adds -> o boss nunca agride as próprias invocações
+  BossBar:
+    Enabled: true
+    Title: '&5&l☠ Guardião Corrompido ☠'
+    Range: 60
+    Color: PURPLE
+    Style: SOLID
   Options:
     AlwaysShowName: true
+    Despawn: false            # o boss não some se o grupo morrer/deslogar
+    KnockbackResistance: 1.0  # boss Souls-like não pode tomar stunlock de knockback
+    PreventOtherDrops: true
+    PreventRandomEquipment: true
     Silent: false
     Collidable: true
+    FollowRange: 48
+  Modules:
+    ThreatTable: true         # aggro por ameaça -> um "tanque" consegue segurar o boss
+  DamageModifiers:
+    # Anti-cheese (Souls-like): o boss não morre para táticas degeneradas
+    - PROJECTILE 0.75         # ranged continua viável, mas não trivializa
+    - FALL 0
+    - DROWNING 0
+    - SUFFOCATION 0
+    - FIRE 0
+    - FIRE_TICK 0
+    - LAVA 0
+    - POISON 0
+    - WITHER 0
   AIGoalSelectors:
     - clear
-    - melee
+    - meleeattack
   AITargetSelectors:
     - clear
-    - players
-    - mythicmobs
+    - players               # "mythicmobs" foi removido: fazia o boss atacar os próprios adds
 
   Skills:
-    # ==================== FASE 1 (100% ~ 60% HP) ====================
-    - skill{GolpePesado} @Self ~onTimer:180
-    - skill{ComboTriplo} @Self ~onTimer:220
-    - skill{InvocarAlmas} @Self ~onTimer:300 ~condition{HealthAbove 60}
+    # ---------------- SETUP / CONTROLE DE FASE ----------------
+    # Fases controladas por variável (padrão moderno do MythicMobs):
+    #   fase 1 = 100~60% HP | fase 2 = 60~30% HP | fase 3 = <30% HP
+    - setvariable{var=caster.fase;value=1;type=INTEGER} @self ~onSpawn
+    - skill{s=GC_Intro} @self ~onSpawn
 
-    # ==================== FASE 2 (60% ~ 30% HP) ====================
-    - skill{ProjetilAlma} @Self ~onTimer:160 ~condition{HealthBelow 60}
-    - skill{ErupcaoAlmas} @Self ~onTimer:280 ~condition{HealthBelow 60}
-    - skill{DestruirPilar} @Self ~onTimer:400 ~condition{HealthBelow 60}
+    # Transições disparam UMA única vez (guardadas pela variável de fase)
+    - skill{s=GC_TransicaoFase2} @self ~onDamaged ?varequals{var=caster.fase;value=1} ?health{h=<60%}
+    - skill{s=GC_TransicaoFase3} @self ~onDamaged ?varequals{var=caster.fase;value=2} ?health{h=<30%}
 
-    # ==================== FASE 3 (< 30% HP) ====================
-    - skill{InvestidaFuriosa} @Self ~onTimer:140 ~condition{HealthBelow 30}
-    - skill{TempestadeAlmas} @Self ~onTimer:350 ~condition{HealthBelow 30}
-    - skill{SummonFinal} @Self ~onTimer:500 ~condition{HealthBelow 30}
+    # ---------------- ROTAÇÃO BASE (todas as fases) ----------------
+    # ?!varequals{var=caster.ocupado;value=1} funciona como "GCD": o boss não
+    # inicia um ataque grande enquanto outro cast está em andamento.
+    # (a variável "ocupado" é setada com duration e expira sozinha)
+    - skill{s=GC_GolpePesado} @self ~onTimer:160 ?playerwithin{d=24} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ComboTriplo} @self ~onTimer:220 ?targetwithin{d=5} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_Agarrao} @self ~onTimer:300 ?targetwithin{d=3} ?!varequals{var=caster.ocupado;value=1}
 
-    # Transições de Fase (efeitos visuais e sonoros)
-    - message{&cO Guardião desperta sua fúria...} @Self ~onHealthBelow 60
-    - effect{ particles{type=SOUL, amount=80, speed=0.8} } @Self ~onHealthBelow 60
-    - sound{entity.wither.death volume=1.2 pitch=0.7} @Self ~onHealthBelow 60
+    # ---------------- FASE 1 ----------------
+    # Cap de 3 adds vivos: sem cap, grupos lentos afogam em Almas
+    - skill{s=GC_InvocarAlmas} @self ~onTimer:400 ?varequals{var=caster.fase;value=1} ?mobsinradius{types=AlmaCorrompida;amount=<4;radius=40}
 
-    - message{&4O Véu está rasgado!} @Self ~onHealthBelow 30
-    - effect{ particles{type=CRIMSON_SPORE, amount=120, speed=1.2} } @Self ~onHealthBelow 30
-    - sound{entity.ender_dragon.growl volume=1.5 pitch=0.6} @Self ~onHealthBelow 30
+    # ---------------- FASE 2+ (fase != 1) ----------------
+    - skill{s=GC_ProjetilAlma} @self ~onTimer:200 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=30} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ErupcaoAlmas} @self ~onTimer:340 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=10} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_RaioDoVeu} @self ~onTimer:460 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=40} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ChuvaDeAlmas} @self ~onTimer:520 ?varequals{var=caster.fase;value=2}
 
-  # ==================== DEFINIÇÃO DAS SKILLS ====================
+    # ---------------- FASE 3 ----------------
+    - skill{s=GC_ChuvaDeAlmas} @self ~onTimer:340 ?varequals{var=caster.fase;value=3}
+    - skill{s=GC_InvestidaFuriosa} @self ~onTimer:260 ?varequals{var=caster.fase;value=3} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_TempestadeAlmas} @self ~onTimer:700 ?varequals{var=caster.fase;value=3} ?!varequals{var=caster.ocupado;value=1}
 
-  GolpePesado:
-    Skills:
-      - delay 8
-      - effect{ particles{type=SOUL_FIRE_FLAME, amount=30, speed=0.6} radius=2 } @Self
-      - sound{entity.wither.hurt volume=0.9 pitch=0.8} @Self
-      - delay 12
-      - damage{amount=45; radius=3.5; type=PHYSICAL} @Forward{f=3.5; r=0}
-      - push{velocity=1.8; y=0.4} @Forward{f=3.5; r=0}
-      - effect{ particles{type=EXPLOSION, amount=15} radius=3.5 } @Forward{f=3.5; r=0}
+    # ---------------- MORTE ----------------
+    - skill{s=GC_Morte} @self ~onDeath
 
-  ComboTriplo:
-    Skills:
-      - damage{amount=22; radius=2.8} @Forward{f=2.5}
-      - delay 8
-      - damage{amount=24; radius=2.8} @Forward{f=2.5}
-      - delay 9
-      - damage{amount=38; radius=3.2; type=PHYSICAL} @Forward{f=2.8}
-      - stun{duration=25} @Forward{f=2.8}
-      - effect{ particles{type=CRIT, amount=25} radius=3 } @Forward{f=2.8}
-
-  InvocarAlmas:
-    Skills:
-      - summon{type=AlmaCorrompida; amount=2; radius=4} @Self
-      - summon{type=AlmaCorrompida; amount=1; radius=5} @Self
-      - message{&7Almas corrompidas emergem do chão...} @Self
-      - effect{ particles{type=SOUL, amount=60} radius=6 } @Self
-
-  ProjetilAlma:
-    Skills:
-      - delay 6
-      - effect{ particles{type=SOUL, amount=40, speed=1.2} radius=1.5 } @Self
-      - sound{entity.ghast.shoot volume=0.8 pitch=1.1} @Self
-      - delay 10
-      - projectile{type=ender_pearl; speed=1.4; homing=false; amount=3; spread=25} @Forward{f=2}
-      - damage{amount=32; type=MAGIC} @projectile
-      - effect{ particles{type=SOUL_FIRE_FLAME, amount=15} } @projectile
-
-  ErupcaoAlmas:
-    Skills:
-      - message{&5O Guardião canaliza energia sombria...} @Self
-      - delay 25
-      - effect{ particles{type=SOUL, amount=150, speed=1.5} radius=8 } @Self
-      - sound{entity.wither.spawn volume=1.0 pitch=0.5} @Self
-      - delay 8
-      - damage{amount=55; radius=7; type=MAGIC} @Self
-      - push{velocity=2.2; y=0.6} @Players{r=8}
-      - effect{ particles{type=EXPLOSION_EMITTER, amount=30} radius=7 } @Self
-
-  DestruirPilar:
-    Skills:
-      - message{&cUm pilar começa a ruir...} @Self
-      - effect{ particles{type=BLOCK_CRACK, material=DEEPSLATE_BRICKS, amount=80} radius=4 } @RandomPlayer{r=12}
-      # Nota: A destruição real do pilar deve ser feita via comando ou redstone manualmente
-      # ou com um MythicMob separado no pilar
-
-  InvestidaFuriosa:
-    Skills:
-      - message{&4O Guardião avança furioso!} @Self
-      - effect{ particles{type=CRIMSON_SPORE, amount=50} radius=2 } @Self
-      - delay 6
-      - damage{amount=48; radius=2.5} @Forward{f=8}
-      - push{velocity=3.5; y=0.3} @Forward{f=8}
-      - effect{ particles{type=SWEEP_ATTACK, amount=20} radius=3 } @Forward{f=8}
-
-  TempestadeAlmas:
-    Skills:
-      - message{&4&lTEMPESTADE DE ALMAS! Encontrem cobertura!} @Self
-      - delay 15
-      - effect{ particles{type=SOUL_FIRE_FLAME, amount=200, speed=2} radius=10 } @Self
-      - sound{entity.ender_dragon.growl volume=1.8 pitch=0.4} @Self
-      - delay 35
-      - damage{amount=75; radius=9; type=MAGIC} @Self
-      - effect{ particles{type=EXPLOSION, amount=60} radius=9 } @Self
-      - push{velocity=2.8; y=0.8} @Players{r=9}
-
-  SummonFinal:
-    Skills:
-      - summon{type=EcoGuardiao; amount=1; radius=3} @Self
-      - message{&cUm Eco do Guardião surge!} @Self
-      - effect{ particles{type=SOUL, amount=100} radius=5 } @Self
-
-  # ==================== DROPS (ItemsAdder) ====================
   Drops:
-    - item{LaminaVeuCorrompido} amount=1 chance=0.35
-    - item{ElmoGuardiaoCorrompido} amount=1 chance=0.40
-    - item{AnelAlmaPresa} amount=1 chance=0.25
-    - item{FragmentoVeuRasgado} amount=1~3 chance=0.80
+    # Sintaxe MythicMobs: <drop> <quantidade> <chance>
+    # Ajuste o namespace/case dos itens para o do pack final do ItemsAdder.
+    - itemsadder{item=minecraftsoul:LaminaVeuCorrompido} 1 0.35
+    - itemsadder{item=minecraftsoul:ElmoGuardiaoCorrompido} 1 0.40
+    - itemsadder{item=minecraftsoul:AnelAlmaPresa} 1 0.25
+    - itemsadder{item=minecraftsoul:FragmentoVeuRasgado} 1to3 0.80
+    - exp 350 1
 
-# ==================== MOBS SECUNDÁRIOS ====================
+# ============================================================
+# MOBS SECUNDÁRIOS
+# ============================================================
 
+# Add da Fase 1: fraco individualmente, mas aplica Lentidão ao acertar —
+# ignorá-lo custa mobilidade, que é vida num boss Souls-like.
 AlmaCorrompida:
   Type: ZOMBIE
   Display: '&7Alma Corrompida'
-  Health: 45
-  Damage: 12
+  Health: 60
+  Damage: 7
+  MovementSpeed: 0.3
+  Faction: Corrompidos
   Options:
     Silent: true
+    Despawn: true
+    PreventOtherDrops: true
+    PreventRandomEquipment: true
+  AIGoalSelectors:
+    - clear
+    - meleeattack
+  AITargetSelectors:
+    - clear
+    - players
   Skills:
-    - skill{AlmaAttack} @Self ~onTimer:60
+    - potion{type=SLOWNESS;duration=40;level=1} @trigger ~onAttack
+    - effect:particles{p=soul;amount=8;speed=0.05} @trigger ~onAttack
+    - remove @self ~onSignal:GC_BOSS_MORTO
 
-AlmaAttack:
-  Skills:
-    - damage{amount=14} @Forward{f=1.5}
-    - effect{ particles{type=SOUL, amount=12} radius=1.5 } @Forward{f=1.5}
-
+# Mini-boss da Fase 3: entra junto com a transição, dividindo a atenção do grupo.
 EcoGuardiao:
   Type: WITHER_SKELETON
   Display: '&5Eco do Guardião'
-  Health: 280
-  Damage: 22
-  Armor: 12
+  Health: 900
+  Damage: 12
+  Armor: 8
+  MovementSpeed: 0.3
+  Faction: Corrompidos
+  Options:
+    Despawn: true
+    KnockbackResistance: 0.6
+    PreventOtherDrops: true
+    PreventRandomEquipment: true
+  AIGoalSelectors:
+    - clear
+    - meleeattack
+  AITargetSelectors:
+    - clear
+    - players
   Skills:
-    - skill{EcoGolpe} @Self ~onTimer:120
+    - skill{s=GC_EcoGolpe} @self ~onTimer:120 ?targetwithin{d=4}
+    - remove @self ~onSignal:GC_BOSS_MORTO
 
-EcoGolpe:
+# Mob-marcador invisível da mecânica "Chuva de Almas" (Fase 2+).
+# Todo o ciclo de vida dele (telegraph -> erupção -> poça -> remoção)
+# está na metaskill GC_Zona_Ciclo.
+GC_ZonaCorrompida:
+  Type: ARMOR_STAND
+  Display: '&8Zona Corrompida'
+  Health: 1
+  Faction: Corrompidos
+  Options:
+    Invisible: true
+    Marker: true
+    Invincible: true
+    Silent: true
+    Collidable: false
+    Despawn: true
   Skills:
-    - damage{amount=35; radius=3} @Forward{f=2.5}
-    - effect{ particles{type=SOUL_FIRE_FLAME, amount=25} radius=3 } @Forward{f=2.5}
-    - push{velocity=1.5; y=0.2} @Forward{f=2.5}
+    - skill{s=GC_Zona_Ciclo} @self ~onSpawn
+    - remove @self ~onSignal:GC_BOSS_MORTO
 
-# Fim do arquivo
-# Dica: Use /mm reload depois de colocar no servidor
-# Para spawn manual: /mm spawn GuardiãoCorrompido <world> <x> <y> <z>
+# ============================================================
+# Depois de copiar para o servidor: /mm reload
+# ============================================================

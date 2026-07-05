@@ -131,10 +131,21 @@ Alta quantidade de XP (bom para subir de nível rápido no early-mid game).
 
 ## Status Base (MythicMobs)
 
-- **Vida:** 950
-- **Dano:** 28
-- **Defesa:** 18
-- **Velocidade:** 0.25 (aumenta nas fases 2 e 3)
+Balanceado para **grupo de 4 jogadores, nível 15~25**:
+
+- **Vida:** 6500 (~2,5 a 4 min de luta)
+- **Dano (melee básico):** 14
+- **Defesa (Armor):** 12
+- **Velocidade:** 0.27 (Velocidade II + Força I permanentes na Fase 3)
+- **Aggro:** ThreatTable ativa (tanque consegue segurar o boss)
+- **Anti-cheese:** imune a fogo/lava/queda/veneno/wither; dano de projétil reduzido a 75%
+
+### Mecânicas de arena (v2)
+
+- **Chuva de Almas** (Fase 2+): zonas corrompidas surgem na posição de cada jogador — telegraph de anel, erupção e poça persistente que nega área.
+- **Olhar do Véu** (Fase 2+): após 3s de canalização, atinge todo jogador na **linha de visão** do boss. Substitui a antiga "Destruição de Pilar": os pilares agora importam porque bloqueiam o Olhar do Véu e a Tempestade de Almas (que também só atinge quem está em linha de visão).
+
+> Configs: `configs/mythicmobs/bosses/guardiao-corrompido.yml` (mobs) e `configs/mythicmobs/skills/guardiao-corrompido-skills.yml` (metaskills). ID interno do mob: `GuardiaoCorrompido` (sem acento).
 
 ---
 
