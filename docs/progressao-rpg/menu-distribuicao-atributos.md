@@ -1,59 +1,64 @@
-# Menu de Distribuição de Atributos (DeluxeMenus)
+# Menu de Distribuição de Atributos (Melhorado - A4.2)
 
 ## Visão Geral
 
-Este menu permite que o jogador distribua livremente seus **pontos de atributo** entre os 5 stats principais, sem nenhuma trava de classe.
+Menu visualmente rico e funcional criado com **DeluxeMenus** para o sistema de progressão classless do MineCraftSoul.
 
-É a interface principal do sistema classless que queremos.
+**Comando para abrir:** `/atributos`
 
-## Como funciona
+## Melhorias Implementadas (A4.2)
 
-- O menu é aberto com o comando **/atributos**
-- Mostra os valores atuais de cada stat usando placeholders do AuraSkills
-- Cada botão aumenta o stat em **+1** (consumindo 1 ponto de atributo)
-- O menu atualiza automaticamente após cada clique (refresh)
-- Requer que o jogador tenha pelo menos 1 ponto disponível para ver os botões de aumento
+### 1. Visual e UX
+- Título dinâmico com nome do jogador
+- Design mais limpo e organizado (54 slots)
+- Cores distintas para cada atributo
+- Lore muito mais detalhado e explicativo
+- Som de "level up" ao gastar ponto
 
-## Stats suportados
+### 2. Informações Extras
+- Cabeçalho mostra Nível + Pontos disponíveis
+- Seção de **Resumo dos Bônus** no lado direito
+- Cada botão mostra exatamente o que o stat aumenta
 
-| Stat            | Material no Menu     | Efeito principal                     |
-|-----------------|----------------------|--------------------------------------|
-| Força          | Diamond Sword        | Dano melee + carga                   |
-| Constituição   | Shield               | Vida + resistência física            |
-| Destreza        | Bow                  | Crítico + ranged + esquiva          |
-| Inteligência    | Enchanted Book       | Dano mágico + mana + skills         |
-| Sabedoria       | Experience Bottle    | Resistência mágica + cura            |
+### 3. Experiência mais imersiva
+- Sons ao clicar
+- Feedback visual imediato (menu reabre atualizado)
+- Dicas de builds híbridas
 
-## Instalação e Configuração
+## Como Instalar
 
 1. Instale os plugins:
-   - **DeluxeMenus**
-   - **PlaceholderAPI** (com expansões do AuraSkills)
-   - **AuraSkills**
+   - DeluxeMenus
+   - PlaceholderAPI (com expansão do AuraSkills)
+   - AuraSkills
 
-2. Coloque o arquivo `attribute-distribution.yml` em:
-   `plugins/DeluxeMenus/menus/`
+2. Copie o arquivo:
+   ```
+   plugins/DeluxeMenus/menus/attribute-distribution.yml
+   ```
 
-3. Dê reload no DeluxeMenus:
-   `/deluxemenus reload`
+3. Recarregue:
+   ```
+   /deluxemenus reload
+   ```
 
-4. (Opcional) Dê ao jogador permissão para usar o comando:
-   `deluxemenus.menu.atributos`
+4. Abra com:
+   ```
+   /atributos
+   ```
 
-## Comandos úteis
+## Observações Importantes
 
-- `/atributos` — Abre o menu
-- `/auraskills stats <jogador>` — Vê stats atuais
-- `/auraskills addattribute <jogador> <stat> <quantidade>` — Adiciona manualmente (console)
+- Os placeholders `%auraskills_strength%`, `%auraskills_constitution%` etc. dependem da configuração do AuraSkills + PlaceholderAPI.
+- Se algum placeholder não funcionar, verifique se a expansão do AuraSkills está instalada no PlaceholderAPI.
+- O comando `auraskills addattribute` precisa estar disponível e com permissões corretas.
 
-## Dicas de balanceamento
+## Próximos Passos Sugeridos
 
-- No início, os pontos vêm rápido (level 1~20)
-- Depois o ganho diminui (conforme documentado em `ganho-de-pontos-e-level-up.md`)
-- O menu incentiva o jogador a testar builds híridas
+- Adicionar botão de **Reset de Stats** (com custo em Almas)
+- Criar versão ainda mais avançada com efeitos de partículas
+- Integrar com o sistema de Almas/Ecos
 
-## Próximos passos possíveis
+---
 
-- Adicionar botão de "Reset de Stats" (com custo em almas ou dinheiro)
-- Criar menus secundários por build (ex: "Build Tanque", "Build DPS")
-- Integrar com o sistema de Almas/Ecos (morte perde pontos temporários)
+**Status:** Implementado e melhorado (A4.2)

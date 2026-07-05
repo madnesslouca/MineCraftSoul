@@ -1,145 +1,222 @@
-menu_title: '&8▶ Distribuição de Atributos'
-open_command: atributos
-size: 54
+menu:
+  title: '&8[&6MineCraftSoul&8] &fDistribuição de Atributos &7- &e%player_name%'
+  size: 54
+  open-sound: 'UI_BUTTON_CLICK'
+  close-sound: 'UI_BUTTON_CLICK'
 
 items:
+  # ==================== HEADER ====================
+  header-glass:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 0-8
+    name: '&8'
 
-  header:
+  header-main:
     material: NETHER_STAR
     slot: 4
-    display_name: '&6Seus Pontos de Atributo'
+    name: '&6&l✦ &e&lDISTRIBUIÇÃO DE ATRIBUTOS &6&l✦'
     lore:
-      - '&7Nível atual: &a%player_level%'
-      - '&7Pontos disponíveis: &a%auraskills_attribute_points%'
-      - ''
-      - '&7Distribua seus pontos livremente!'
-      - '&7Sem travas de classe — crie sua build!'
-      - ''
-      - '&8Menu atualizado automaticamente'
+      - '&7'
+      - '&fNível Atual: &a%auraskills_level%'
+      - '&fPontos Disponíveis: &e%auraskills_attribute_points%'
+      - '&7'
+      - '&7Gaste seus pontos livremente!'
+      - '&7Sem classes. Sem travas. Só sua escolha.'
+      - '&7'
 
+  # ==================== PONTOS DISPONÍVEIS (DESTAQUE) ====================
+  points-info:
+    material: EXPERIENCE_BOTTLE
+    slot: 22
+    name: '&e&l▶ Seus Pontos Disponíveis'
+    lore:
+      - '&7'
+      - '&fVocê tem &e%auraskills_attribute_points% &fpontos'
+      - '&fpara distribuir agora.'
+      - '&7'
+      - '&7Cada level up concede mais pontos!'
+      - '&7'
+
+  # ==================== FORÇA ====================
   forca:
     material: DIAMOND_SWORD
-    slot: 19
-    display_name: '&c&lFORÇA'
+    slot: 11
+    name: '&c&l⚔️  FORÇA'
     lore:
-      - '&7Valor atual: &c%auraskills_strength%'
-      - ''
+      - '&7'
+      - '&fValor Atual: &c%auraskills_strength%'
+      - '&7'
       - '&7Aumenta:'
-      - '&8• Dano melee'
-      - '&8• Capacidade de carga'
-      - '&8• Requisitos de armas pesadas'
-      - ''
-      - '&eClique esquerdo para +1'
-      - '&cCusto: 1 Ponto de Atributo'
-    left_click_commands:
+      - '&8• &fDano corpo a corpo'
+      - '&8• &fCapacidade de carregar peso'
+      - '&8• &fRequisitos de armas pesadas'
+      - '&8• &fDano de skills físicas'
+      - '&7'
+      - '&aClique para investir &e+1 &aponto'
+      - '&7'
+      - '&c&l⚠ &fRequer &e1 &fpontos disponível'
+    sound: 'ENTITY_PLAYER_LEVELUP'
+    left-click:
       - '[console] auraskills addattribute %player_name% strength 1'
-      - '[message] &a+1 Força adicionada!'
-      - '[refresh]'
-    view_requirement:
-      expression: '%auraskills_attribute_points% >= 1'
+      - '[console] deluxemenus open attribute-distribution %player_name%'
 
+  # ==================== CONSTITUIÇÃO ====================
   constituicao:
     material: SHIELD
-    slot: 21
-    display_name: '&2&lCONSTITUIÇÃO'
+    slot: 12
+    name: '&2&l❤️  CONSTITUIÇÃO'
     lore:
-      - '&7Valor atual: &2%auraskills_constitution%'
-      - ''
+      - '&7'
+      - '&fValor Atual: &2%auraskills_constitution%'
+      - '&7'
       - '&7Aumenta:'
-      - '&8• Vida máxima'
-      - '&8• Regeneração'
-      - '&8• Resistência física'
-      - ''
-      - '&eClique esquerdo para +1'
-      - '&cCusto: 1 Ponto de Atributo'
-    left_click_commands:
+      - '&8• &fVida máxima'
+      - '&8• &fRegeneração de vida'
+      - '&8• &fResistência física'
+      - '&8• &fSobrevivência em geral'
+      - '&7'
+      - '&aClique para investir &e+1 &aponto'
+      - '&7'
+      - '&c&l⚠ &fRequer &e1 &fpontos disponível'
+    sound: 'ENTITY_PLAYER_LEVELUP'
+    left-click:
       - '[console] auraskills addattribute %player_name% constitution 1'
-      - '[message] &a+1 Constituição adicionada!'
-      - '[refresh]'
-    view_requirement:
-      expression: '%auraskills_attribute_points% >= 1'
+      - '[console] deluxemenus open attribute-distribution %player_name%'
 
+  # ==================== DESTREZA ====================
   destreza:
     material: BOW
-    slot: 23
-    display_name: '&b&lDESTREZA'
+    slot: 13
+    name: '&b&l➳  DESTREZA'
     lore:
-      - '&7Valor atual: &b%auraskills_dexterity%'
-      - ''
+      - '&7'
+      - '&fValor Atual: &b%auraskills_dexterity%'
+      - '&7'
       - '&7Aumenta:'
-      - '&8• Velocidade de ataque'
-      - '&8• Chance de crítico'
-      - '&8• Dano ranged'
-      - '&8• Esquiva'
-      - ''
-      - '&eClique esquerdo para +1'
-      - '&cCusto: 1 Ponto de Atributo'
-    left_click_commands:
+      - '&8• &fVelocidade de ataque'
+      - '&8• &fChance de crítico'
+      - '&8• &fDano à distância'
+      - '&8• &fEsquiva e mobilidade'
+      - '&7'
+      - '&aClique para investir &e+1 &aponto'
+      - '&7'
+      - '&c&l⚠ &fRequer &e1 &fpontos disponível'
+    sound: 'ENTITY_PLAYER_LEVELUP'
+    left-click:
       - '[console] auraskills addattribute %player_name% dexterity 1'
-      - '[message] &a+1 Destreza adicionada!'
-      - '[refresh]'
-    view_requirement:
-      expression: '%auraskills_attribute_points% >= 1'
+      - '[console] deluxemenus open attribute-distribution %player_name%'
 
+  # ==================== INTELIGÊNCIA ====================
   inteligencia:
     material: ENCHANTED_BOOK
-    slot: 25
-    display_name: '&d&lINTELIGÊNCIA'
+    slot: 14
+    name: '&d&l✨  INTELIGÊNCIA'
     lore:
-      - '&7Valor atual: &d%auraskills_intelligence%'
-      - ''
+      - '&7'
+      - '&fValor Atual: &d%auraskills_intelligence%'
+      - '&7'
       - '&7Aumenta:'
-      - '&8• Dano mágico'
-      - '&8• Mana máxima'
-      - '&8• Potência de skills'
-      - ''
-      - '&eClique esquerdo para +1'
-      - '&cCusto: 1 Ponto de Atributo'
-    left_click_commands:
+      - '&8• &fDano mágico'
+      - '&8• &fMana máxima'
+      - '&8• &fPotência de skills'
+      - '&8• &fVelocidade de conjuração'
+      - '&7'
+      - '&aClique para investir &e+1 &aponto'
+      - '&7'
+      - '&c&l⚠ &fRequer &e1 &fpontos disponível'
+    sound: 'ENTITY_PLAYER_LEVELUP'
+    left-click:
       - '[console] auraskills addattribute %player_name% intelligence 1'
-      - '[message] &a+1 Inteligência adicionada!'
-      - '[refresh]'
-    view_requirement:
-      expression: '%auraskills_attribute_points% >= 1'
+      - '[console] deluxemenus open attribute-distribution %player_name%'
 
+  # ==================== SABEDORIA ====================
   sabedoria:
     material: EXPERIENCE_BOTTLE
-    slot: 40
-    display_name: '&5&lSABEDORIA'
+    slot: 15
+    name: '&5&l❖  SABEDORIA'
     lore:
-      - '&7Valor atual: &5%auraskills_wisdom%'
-      - ''
+      - '&7'
+      - '&fValor Atual: &5%auraskills_wisdom%'
+      - '&7'
       - '&7Aumenta:'
-      - '&8• Resistência mágica'
-      - '&8• Cura e suporte'
-      - '&8• Eficiência de skills'
-      - ''
-      - '&eClique esquerdo para +1'
-      - '&cCusto: 1 Ponto de Atributo'
-    left_click_commands:
+      - '&8• &fResistência mágica'
+      - '&8• &fPoder de cura'
+      - '&8• &fEficiência de skills de suporte'
+      - '&8• &fRegeneração de mana'
+      - '&7'
+      - '&aClique para investir &e+1 &aponto'
+      - '&7'
+      - '&c&l⚠ &fRequer &e1 &fpontos disponível'
+    sound: 'ENTITY_PLAYER_LEVELUP'
+    left-click:
       - '[console] auraskills addattribute %player_name% wisdom 1'
-      - '[message] &a+1 Sabedoria adicionada!'
-      - '[refresh]'
-    view_requirement:
-      expression: '%auraskills_attribute_points% >= 1'
+      - '[console] deluxemenus open attribute-distribution %player_name%'
 
-  instructions:
+  # ==================== RESUMO DE BÔNUS (LADO DIREITO) ====================
+  resumo-header:
+    material: BOOK
+    slot: 30
+    name: '&6&l▼ RESUMO DOS SEUS BÔNUS ▼'
+    lore:
+      - '&7'
+      - '&fAqui você vê o impacto'
+      - '&fdos seus atributos atuais.'
+
+  resumo-forca:
+    material: DIAMOND_SWORD
+    slot: 31
+    name: '&cForça: &f%auraskills_strength%'
+    lore:
+      - '&7Dano melee +%auraskills_strength%'
+
+  resumo-constituicao:
+    material: SHIELD
+    slot: 32
+    name: '&2Constituição: &f%auraskills_constitution%'
+    lore:
+      - '&7Vida extra +%auraskills_constitution%'
+
+  resumo-destreza:
+    material: BOW
+    slot: 33
+    name: '&bDestreza: &f%auraskills_dexterity%'
+    lore:
+      - '&7Crítico +%auraskills_dexterity%'
+
+  resumo-inteligencia:
+    material: ENCHANTED_BOOK
+    slot: 34
+    name: '&dInteligência: &f%auraskills_intelligence%'
+    lore:
+      - '&7Dano mágico +%auraskills_intelligence%'
+
+  resumo-sabedoria:
+    material: EXPERIENCE_BOTTLE
+    slot: 35
+    name: '&5Sabedoria: &f%auraskills_wisdom%'
+    lore:
+      - '&7Resistência mágica +%auraskills_wisdom%'
+
+  # ==================== INSTRUÇÕES ====================
+  instrucoes:
     material: PAPER
     slot: 49
-    display_name: '&7Como funciona?'
+    name: '&e&lℹ Como usar'
     lore:
-      - '&8• Cada level up dá pontos de atributo'
-      - '&8• Distribua livremente entre os 5 stats'
-      - '&8• Sem classes fixas — sua build é única!'
-      - '&8• Skills escalam com combinações de stats'
-      - ''
-      - '&7Ex: Força + Inteligência = Lâmina Flamejante'
+      - '&7'
+      - '&f1. Veja quantos pontos você tem'
+      - '&f2. Clique no atributo que quer subir'
+      - '&f3. O menu atualiza automaticamente'
+      - '&f4. Teste diferentes combinações!'
+      - '&7'
+      - '&7Dica: Builds híbridas são muito fortes!'
 
-  close:
+  fechar:
     material: BARRIER
     slot: 53
-    display_name: '&cFechar Menu'
+    name: '&c&l✖ Fechar Menu'
     lore:
-      - '&7Clique para fechar'
-    left_click_commands:
+      - '&7Clique para sair'
+    sound: 'UI_BUTTON_CLICK'
+    left-click:
       - '[close]'
