@@ -1,0 +1,42 @@
+# Eco da Alma - Sistema Souls-like
+# Entidade flutuante que guarda as almas do jogador morto
+
+eco_da_alma:
+  Type: ALLAY
+  Display: '&5&lEco da Alma'
+  Health: 1
+  Damage: 0
+  Options:
+    Silent: true
+    Invincible: true
+    NoAI: true
+    Glowing: true
+    Persistent: false
+    Despawn: true
+  AIGoalSelectors:
+    - clear
+  AITargetSelectors:
+    - clear
+  Skills:
+    # Efeito visual constante de alma
+    - effect:particles{particle=SOUL; amount=8; speed=0.03; yoffset=0.8} @Timer{interval=8}
+    - effect:particles{particle=SOUL_FIRE_FLAME; amount=3; speed=0.01; yoffset=1.2} @Timer{interval=15}
+    
+    # Mensagem quando jogador se aproxima
+    - message{msg="&d&lEco da Alma &7- &fClique direito para recuperar suas Almas"; radius=4} @Trigger
+    
+    # Som ambiente suave
+    - sound{Sound=ENTITY_ALLAY_AMBIENT_WITH_ITEM; volume=0.6; pitch=0.8} @Timer{interval=40}
+
+  # Não dropa nada ao morrer (o script controla a recuperação)
+  Drops:
+    - nothing
+
+  # Visual
+  Equipment:
+    helmet: SOUL_LANTERN
+    offhand: SOUL_LANTERN
+
+  # Metadados que serão usados pelo Skript
+  # - "almas" : quantidade de almas guardadas
+  # - "owner" : UUID do dono original
