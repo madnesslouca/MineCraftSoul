@@ -1,0 +1,40 @@
+# Exemplo inicial de Stats Custom para AuraSkills
+# Este arquivo é um modelo. Será refinado conforme testarmos.
+
+stats:
+  forca:
+    display-name: "&cForça"
+    description: "Aumenta o dano físico melee e a capacidade de carregar itens pesados."
+    icon: "IRON_SWORD"
+    color: "&c"
+
+  constituicao:
+    display-name: "&aConstituição"
+    description: "Aumenta a vida máxima e a regeneração de vida."
+    icon: "GOLDEN_APPLE"
+    color: "&a"
+
+  destreza:
+    display-name: "&bDestreza"
+    description: "Aumenta velocidade de ataque, chance de crítico e dano ranged."
+    icon: "BOW"
+    color: "&b"
+
+  inteligencia:
+    display-name: "&dInteligência"
+    description: "Aumenta dano mágico, mana máxima e potência de skills."
+    icon: "ENCHANTED_BOOK"
+    color: "&d"
+
+  sabedoria:
+    display-name: "&eSabedoria"
+    description: "Aumenta resistência mágica, cura e regeneração de mana."
+    icon: "EXPERIENCE_BOTTLE"
+    color: "&e"
+
+# Exemplo de como um stat pode ter fórmula de scaling
+# (será implementado com PlaceholderAPI + custom skills)
+
+# forca:
+#   damage-multiplier: 0.05   # +5% de dano por ponto
+#   max-value: 100
