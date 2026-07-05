@@ -131,19 +131,22 @@ Alta quantidade de XP (bom para subir de nível rápido no early-mid game).
 
 ## Status Base (MythicMobs)
 
-Balanceado para **grupo de 4 jogadores, nível 15~25**:
+**Tuning brutal**: mesmo com grupo de 4 (nível 15~25) o wipe nas primeiras tentativas é o esperado. O boss é um "muro" que empurra o grupo a upar, explorar e voltar mais forte — filosofia Souls.
 
-- **Vida:** 6500 (~2,5 a 4 min de luta)
-- **Dano (melee básico):** 14
-- **Defesa (Armor):** 12
-- **Velocidade:** 0.27 (Velocidade II + Força I permanentes na Fase 3)
+- **Vida:** 12000 (~5 a 7 min de luta para grupo coordenado)
+- **Dano (melee básico):** 22
+- **Defesa (Armor):** 16
+- **Velocidade:** 0.28 (Velocidade II + Força II permanentes na Fase 3)
 - **Aggro:** ThreatTable ativa (tanque consegue segurar o boss)
-- **Anti-cheese:** imune a fogo/lava/queda/veneno/wither; dano de projétil reduzido a 75%
+- **Anti-cheese:** imune a fogo/lava/queda/veneno/wither; dano de projétil reduzido a 60%
 
-### Mecânicas de arena (v2)
+### Mecânicas de arena e punição (v2)
 
-- **Chuva de Almas** (Fase 2+): zonas corrompidas surgem na posição de cada jogador — telegraph de anel, erupção e poça persistente que nega área.
-- **Olhar do Véu** (Fase 2+): após 3s de canalização, atinge todo jogador na **linha de visão** do boss. Substitui a antiga "Destruição de Pilar": os pilares agora importam porque bloqueiam o Olhar do Véu e a Tempestade de Almas (que também só atinge quem está em linha de visão).
+- **Chuva de Almas** (Fase 2+): zonas corrompidas surgem na posição de cada jogador — telegraph de anel, erupção e poça persistente de 10s (dano + Lentidão III) que nega área.
+- **Olhar do Véu** (Fase 2+): após 2,5s de canalização, causa 55 de dano a todo jogador na **linha de visão** do boss. Substitui a antiga "Destruição de Pilar": os pilares agora importam porque bloqueiam o Olhar do Véu e a Tempestade de Almas (4 ondas, também por linha de visão).
+- **Represália**: 12% de chance de contra-ataque em 180° ao ser golpeado de perto — spam de ataque colado no boss é aposta perigosa.
+- **Agarrão**: quem gruda no boss ignorando o moveset toma 38 de dano e é arremessado.
+- **Investida dupla** (Fase 3): dois dashes em sequência; o segundo pune quem relaxa após esquivar o primeiro.
 
 > Configs: `configs/mythicmobs/bosses/guardiao-corrompido.yml` (mobs) e `configs/mythicmobs/skills/guardiao-corrompido-skills.yml` (metaskills). ID interno do mob: `GuardiaoCorrompido` (sem acento).
 

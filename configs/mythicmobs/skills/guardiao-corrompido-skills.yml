@@ -68,7 +68,7 @@ GC_TransicaoFase3:
     - effect:particles{p=crimson_spore;amount=250;speed=0.8;hS=3;vS=3} @self
     # Frenesi permanente da Fase 3 (mais rápido e mais forte)
     - potion{type=SPEED;duration=999999;level=2} @self
-    - potion{type=STRENGTH;duration=999999;level=1} @self
+    - potion{type=STRENGTH;duration=999999;level=2} @self
     - delay 40
     # "Summon Final": o Eco entra junto com a fase (1 só, sem respawn)
     - summon{type=EcoGuardiao;amount=1;radius=4} @self
@@ -77,18 +77,18 @@ GC_TransicaoFase3:
 
 # ---------------- ROTAÇÃO BASE (todas as fases) ----------------
 
-# Golpe telegrafado de 1,2s em CONE FRONTAL: esquiva lateral nega tudo.
+# Golpe telegrafado de 1s em CONE FRONTAL: esquiva lateral nega tudo.
 GC_GolpePesado:
-  Cooldown: 6
+  Cooldown: 5
   Skills:
-    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=45} @self
+    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=40} @self
     # Telegraph: som grave + chamas subindo no corpo + anel de fumaça no alcance
     - sound{s=entity.wither.ambient;v=1.2;p=0.5} @self
     - effect:particles{p=soul_fire_flame;amount=25;speed=0.05;hS=0.4;vS=1.2;y=2;repeat=2;repeatInterval=8} @self
     - effect:particlering{particle=smoke;radius=4.5;points=32;y=0.2} @self
-    - delay 24
-    # Impacto
-    - damage{amount=26} @EntitiesInCone{angle=70;range=4.5}
+    - delay 20
+    # Impacto: ~metade da vida de quem não desviou
+    - damage{amount=40} @EntitiesInCone{angle=70;range=4.5}
     - throw{velocity=8;velocityY=4} @EntitiesInCone{angle=70;range=4.5}
     - effect:particles{p=explosion;amount=10;speed=0.1;hS=1.5} @self
     - sound{s=entity.generic.explode;v=1;p=0.8} @self
@@ -97,41 +97,54 @@ GC_GolpePesado:
 # Dois golpes fracos e rápidos + finalizador forte com pausa maior antes
 # (a pausa É a janela de esquiva — quem decorar o ritmo evita o pior golpe).
 GC_ComboTriplo:
-  Cooldown: 8
+  Cooldown: 7
   Skills:
-    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=50} @self
+    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=45} @self
     # Golpe 1
     - sound{s=entity.player.attack.sweep;v=1;p=0.8} @self
-    - damage{amount=9} @EntitiesInCone{angle=90;range=3.2}
+    - damage{amount=14} @EntitiesInCone{angle=90;range=3.2}
     - effect:particles{p=sweep_attack;amount=3;speed=0} @EntitiesInCone{angle=90;range=3.2}
-    - delay 10
+    - delay 8
     # Golpe 2
     - sound{s=entity.player.attack.sweep;v=1;p=1.0} @self
-    - damage{amount=9} @EntitiesInCone{angle=90;range=3.2}
+    - damage{amount=14} @EntitiesInCone{angle=90;range=3.2}
     - effect:particles{p=sweep_attack;amount=3;speed=0} @EntitiesInCone{angle=90;range=3.2}
     # Telegraph do finalizador: som distinto + brilho de crítico
     - sound{s=entity.wither.hurt;v=1;p=0.6} @self
     - effect:particles{p=crit;amount=20;speed=0.2;hS=1} @self
-    - delay 14
+    - delay 12
     # Finalizador: Lentidão pesada no lugar de stun (punição sem travar o jogo)
-    - damage{amount=17} @EntitiesInCone{angle=80;range=3.6}
-    - potion{type=SLOWNESS;duration=30;level=3} @EntitiesInCone{angle=80;range=3.6}
+    - damage{amount=26} @EntitiesInCone{angle=80;range=3.6}
+    - potion{type=SLOWNESS;duration=40;level=3} @EntitiesInCone{angle=80;range=3.6}
     - throw{velocity=6;velocityY=3} @EntitiesInCone{angle=80;range=3.6}
     - sound{s=entity.generic.explode;v=0.8;p=1.4} @self
 
 # Punição de "greed": quem fica colado no boss ignorando o moveset é agarrado
-# e arremessado para o alto. Janela curta (0,6s) — reagiu, escapou.
+# e arremessado para o alto. Janela curta (0,5s) — reagiu, escapou.
 GC_Agarrao:
-  Cooldown: 12
+  Cooldown: 10
   Skills:
-    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=30} @self
+    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=28} @self
     - sound{s=entity.ravager.roar;v=0.8;p=1.6} @self
     - effect:particles{p=crimson_spore;amount=30;speed=0.1;hS=0.8;vS=1} @self
-    - delay 12
-    - damage{amount=24} @target ?targetwithin{d=3.5}
+    - delay 10
+    - damage{amount=38} @target ?targetwithin{d=3.5}
     - actionmessage{a="&cVocê foi agarrado pelo Guardião!"} @target ?targetwithin{d=3.5}
-    - throw{velocity=4;velocityY=10} @target ?targetwithin{d=3.5}
+    - throw{velocity=4;velocityY=11} @target ?targetwithin{d=3.5}
     - sound{s=entity.wither.break_block;v=1;p=0.8} @self
+
+# Contra-ataque reativo (chance de 12% ao ser golpeado de perto, ver mob):
+# varredura de 180° quase instantânea. É o "hyper armor" do boss — spammar
+# ataque colado nele sem observar o ritmo vira aposta perigosa.
+GC_Represalia:
+  Cooldown: 4
+  Skills:
+    - sound{s=entity.wither.hurt;v=1;p=1.4} @self
+    - effect:particles{p=crimson_spore;amount=25;speed=0.2;hS=1;vS=0.6} @self
+    - delay 8
+    - damage{amount=30} @EntitiesInCone{angle=180;range=3.5}
+    - throw{velocity=9;velocityY=4} @EntitiesInCone{angle=180;range=3.5}
+    - sound{s=entity.player.attack.sweep;v=1.2;p=0.6} @self
 
 # ---------------- FASE 1 ----------------
 
@@ -141,7 +154,7 @@ GC_InvocarAlmas:
     - actionmessage{a="&7Almas corrompidas emergem do chão..."} @PIR{r=40}
     - sound{s=entity.zombie.ambient;v=1.2;p=0.5} @self
     - effect:particles{p=soul;amount=60;speed=0.2;hS=4;vS=0.5} @self
-    - summon{type=AlmaCorrompida;amount=3;radius=5} @self
+    - summon{type=AlmaCorrompida;amount=4;radius=5} @self
 
 # ---------------- FASE 2+ ----------------
 
@@ -156,8 +169,8 @@ GC_ProjetilAlma:
     - effect:particles{p=soul;amount=40;speed=0.15;hS=0.6;vS=1;y=1.5;repeat=2;repeatInterval=10} @self
     - delay 20
     - sound{s=entity.ghast.shoot;v=1;p=0.7} @self
-    # repeat=2 -> dispara 3 orbes no total, com 0,6s entre eles
-    - missile{onTick=GC_ProjetilAlma_Tick;onHit=GC_ProjetilAlma_Hit;v=9;i=1;hR=1.2;vR=1.2;md=120;in=0.8;repeat=2;repeatInterval=12} @target
+    # repeat=3 -> dispara 4 orbes no total, com 0,5s entre eles
+    - missile{onTick=GC_ProjetilAlma_Tick;onHit=GC_ProjetilAlma_Hit;v=10;i=1;hR=1.2;vR=1.2;md=120;in=0.8;repeat=3;repeatInterval=10} @target
 
 GC_ProjetilAlma_Tick:
   Skills:
@@ -166,8 +179,8 @@ GC_ProjetilAlma_Tick:
 
 GC_ProjetilAlma_Hit:
   Skills:
-    - damage{amount=11} @target
-    - potion{type=WITHER;duration=60;level=1} @target
+    - damage{amount=16} @target
+    - potion{type=WITHER;duration=80;level=2} @target
     - sound{s=entity.vex.hurt;v=0.8;p=0.6} @target
     - effect:particles{p=soul;amount=15;speed=0.2} @target
 
@@ -178,11 +191,11 @@ GC_ErupcaoAlmas:
     - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=65} @self
     - actionmessage{a="&5&lERUPÇÃO — afaste-se do Guardião!"} @PIR{r=40}
     - sound{s=entity.wither.spawn;v=1.2;p=0.5} @self
-    - effect:particlering{particle=soul_fire_flame;radius=7;points=56;y=0.25;repeat=3;repeatInterval=14} @self
-    - effect:particles{p=soul;amount=80;speed=0.5;hS=0.5;vS=2;repeat=3;repeatInterval=14} @self
-    - delay 45
-    - damage{amount=30} @PIR{r=7}
-    - throw{velocity=11;velocityY=6} @PIR{r=7}
+    - effect:particlering{particle=soul_fire_flame;radius=7;points=56;y=0.25;repeat=3;repeatInterval=13} @self
+    - effect:particles{p=soul;amount=80;speed=0.5;hS=0.5;vS=2;repeat=3;repeatInterval=13} @self
+    - delay 40
+    - damage{amount=45} @PIR{r=7}
+    - throw{velocity=12;velocityY=7} @PIR{r=7}
     - effect:particles{p=explosion_emitter;amount=6;speed=0;hS=3} @self
     - sound{s=entity.generic.explode;v=1.5;p=0.6} @self
     - sound{s=entity.warden.sonic_boom;v=1;p=1.2} @self
@@ -192,16 +205,17 @@ GC_ErupcaoAlmas:
 # Counterplay: esconder atrás dos pilares da arena. Ensina a mecânica que a
 # Tempestade de Almas (Fase 3) exige dominar.
 GC_RaioDoVeu:
-  Cooldown: 18
+  Cooldown: 14
   Skills:
-    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=80} @self
-    - sendtitle{title="&5Olhar do Véu";subtitle="&7Quebre a linha de visão — use os pilares!";fadein=0;duration=45;fadeout=5} @PIR{r=60}
+    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=70} @self
+    - sendtitle{title="&5Olhar do Véu";subtitle="&7Quebre a linha de visão — use os pilares!";fadein=0;duration=40;fadeout=5} @PIR{r=60}
     - sound{s=block.beacon.power_select;v=1.5;p=0.5} @PIR{r=60}
-    - potion{type=GLOWING;duration=60;level=1} @self
-    - effect:particles{p=end_rod;amount=30;speed=0.05;hS=0.5;vS=1.5;y=1.5;repeat=3;repeatInterval=15} @self
-    - delay 60
+    - potion{type=GLOWING;duration=50;level=1} @self
+    - effect:particles{p=end_rod;amount=30;speed=0.05;hS=0.5;vS=1.5;y=1.5;repeat=3;repeatInterval=13} @self
+    - delay 50
     - sound{s=entity.warden.sonic_boom;v=1.6;p=0.8} @PIR{r=60}
-    - damage{amount=38} @PIR{r=40;conditions=[ - lineofsight true ]}
+    # Exposto = praticamente morto. O pilar É a mecânica.
+    - damage{amount=55} @PIR{r=40;conditions=[ - lineofsight true ]}
     - effect:particles{p=soul;amount=25;speed=0.3} @PIR{r=40;conditions=[ - lineofsight true ]}
     - actionmessage{a="&cO Olhar do Véu o encontrou!"} @PIR{r=40;conditions=[ - lineofsight true ]}
 
@@ -217,58 +231,73 @@ GC_ChuvaDeAlmas:
     - summon{type=GC_ZonaCorrompida;amount=1} @PIR{r=50}
 
 # Ciclo de vida da Zona Corrompida (roda no mob-marcador, não no boss):
-# telegraph 1,5s -> erupção -> poça pulsante 8s -> remoção.
+# telegraph 1,2s -> erupção -> poça pulsante 10s -> remoção.
 GC_Zona_Ciclo:
   Skills:
-    - effect:particlering{particle=witch;radius=3;points=40;y=0.2;repeat=2;repeatInterval=12} @self
+    - effect:particlering{particle=witch;radius=3;points=40;y=0.2;repeat=2;repeatInterval=10} @self
     - sound{s=block.bell.resonate;v=1;p=0.6} @self
-    - delay 30
+    - delay 24
     # Erupção (ignora armadura: dano de "hazard", esquivável por posicionamento)
-    - damage{amount=16;ignoreArmor=true} @PIR{r=3}
+    - damage{amount=24;ignoreArmor=true} @PIR{r=3}
     - throw{velocity=5;velocityY=5} @PIR{r=3}
     - effect:particles{p=soul_fire_flame;amount=60;speed=0.4;hS=1.5;vS=2} @self
     - sound{s=entity.generic.explode;v=0.9;p=1.3} @self
-    # Poça persistente: 7 pulsos de dano leve + Lentidão a cada 1s
-    - effect:particlering{particle=soul_fire_flame;radius=3;points=24;y=0.2;repeat=7;repeatInterval=20} @self
-    - damage{amount=3;ignoreArmor=true;repeat=7;repeatInterval=20} @PIR{r=3}
-    - potion{type=SLOWNESS;duration=25;level=2;repeat=7;repeatInterval=20} @PIR{r=3}
-    - delay 160
+    # Poça persistente: 10 pulsos de dano + Lentidão III a cada 1s.
+    # Pisar na poça em fase avançada é sentença de morte — negação de área real.
+    - effect:particlering{particle=soul_fire_flame;radius=3;points=24;y=0.2;repeat=9;repeatInterval=20} @self
+    - damage{amount=5;ignoreArmor=true;repeat=9;repeatInterval=20} @PIR{r=3}
+    - potion{type=SLOWNESS;duration=25;level=3;repeat=9;repeatInterval=20} @PIR{r=3}
+    - delay 200
     - remove @self
 
 # ---------------- FASE 3 ----------------
 
-# Dash no alvo com mais ameaça; a linha de partículas marca o trajeto.
+# DASH DUPLO no alvo com mais ameaça; a linha de partículas marca cada trajeto.
+# O segundo dash pega quem relaxou depois de esquivar o primeiro (clássico Souls).
 GC_InvestidaFuriosa:
-  Cooldown: 10
+  Cooldown: 9
   Skills:
-    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=45} @self
+    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=75} @self
     - actionmessage{a="&4O Guardião vai investir — saia da linha!"} @PIR{r=50}
     - effect:particleline{particle=crimson_spore;distanceBetween=0.4;y=0.3} @target
     - sound{s=entity.ravager.roar;v=1.2;p=0.9} @self
-    - delay 18
+    - delay 16
+    # Dash 1
     - leap{velocity=160} @target
     - delay 10
-    - damage{amount=22} @PIR{r=3.5}
+    - damage{amount=34} @PIR{r=3.5}
+    - throw{velocity=9;velocityY=4} @PIR{r=3.5}
+    - effect:particles{p=explosion;amount=8;speed=0.1;hS=1.5} @self
+    - sound{s=entity.hoglin.attack;v=1.2;p=0.7} @self
+    # Dash 2 (telegraph mais curto: exige atenção contínua)
+    - effect:particleline{particle=crimson_spore;distanceBetween=0.4;y=0.3} @target
+    - sound{s=entity.ravager.roar;v=1.2;p=1.1} @self
+    - delay 12
+    - leap{velocity=160} @target
+    - delay 10
+    - damage{amount=34} @PIR{r=3.5}
     - throw{velocity=9;velocityY=4} @PIR{r=3.5}
     - effect:particles{p=explosion;amount=8;speed=0.1;hS=1.5} @self
     - sound{s=entity.hoglin.attack;v=1.2;p=0.7} @self
 
-# ULTIMATE (Fase 3): 3 ondas que cobrem a arena inteira, MAS só atingem quem
+# ULTIMATE (Fase 3): 4 ondas que cobrem a arena inteira, MAS só atingem quem
 # está na linha de visão do boss. O counterplay são os pilares — a mecânica
-# já foi ensinada pelo Olhar do Véu na Fase 2. Exposto nas 3 ondas = ~morte.
+# já foi ensinada pelo Olhar do Véu na Fase 2. Exposto em 2+ ondas = morte.
 GC_TempestadeAlmas:
-  Cooldown: 30
+  Cooldown: 25
   Skills:
-    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=160} @self
-    - sendtitle{title="&4&lTEMPESTADE DE ALMAS";subtitle="&cEsconda-se atrás dos pilares — 3 ondas!";fadein=0;duration=60;fadeout=10} @PIR{r=60}
+    - setvariable{var=caster.ocupado;value=1;type=INTEGER;duration=180} @self
+    - sendtitle{title="&4&lTEMPESTADE DE ALMAS";subtitle="&cEsconda-se atrás dos pilares — 4 ondas!";fadein=0;duration=60;fadeout=10} @PIR{r=60}
     - sound{s=entity.ender_dragon.growl;v=2;p=0.4} @PIR{r=60}
     - sound{s=block.end_portal.spawn;v=1.2;p=0.5} @PIR{r=60}
     - effect:particles{p=soul;amount=150;speed=0.5;hS=1;vS=3;repeat=5;repeatInterval=14} @self
     - delay 70
     - skill{s=GC_Tempestade_Onda} @self
-    - delay 25
+    - delay 20
     - skill{s=GC_Tempestade_Onda} @self
-    - delay 25
+    - delay 20
+    - skill{s=GC_Tempestade_Onda} @self
+    - delay 20
     - skill{s=GC_Tempestade_Onda} @self
     - sound{s=entity.wither.ambient;v=1;p=0.4} @self   # boss "exausto": janela de punish
 
@@ -276,7 +305,7 @@ GC_Tempestade_Onda:
   Skills:
     - effect:particles{p=soul_fire_flame;amount=200;speed=1.2;hS=8;vS=1;y=1} @self
     - sound{s=entity.generic.explode;v=1.6;p=0.5} @PIR{r=60}
-    - damage{amount=16} @PIR{r=40;conditions=[ - lineofsight true ]}
+    - damage{amount=24} @PIR{r=40;conditions=[ - lineofsight true ]}
     - effect:particles{p=soul;amount=20;speed=0.3} @PIR{r=40;conditions=[ - lineofsight true ]}
 
 # ---------------- SKILLS DOS ADDS ----------------
@@ -287,7 +316,7 @@ GC_EcoGolpe:
     - sound{s=entity.wither_skeleton.ambient;v=1;p=0.6} @self
     - effect:particles{p=soul_fire_flame;amount=20;speed=0.1;hS=0.8;vS=1} @self
     - delay 14
-    - damage{amount=18} @EntitiesInCone{angle=80;range=3.5}
+    - damage{amount=28} @EntitiesInCone{angle=80;range=3.5}
     - throw{velocity=6;velocityY=3} @EntitiesInCone{angle=80;range=3.5}
 
 # ============================================================

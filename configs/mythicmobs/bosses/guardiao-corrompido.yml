@@ -20,10 +20,13 @@
 GuardiaoCorrompido:
   Type: WITHER_SKELETON
   Display: '&5&lGuardião Corrompido'
-  Health: 6500          # ~2,5 a 4 min de luta p/ 4 jogadores nv 15~25 (principal knob de tuning)
-  Damage: 14            # dano do auto-attack melee da IA
-  Armor: 12
-  MovementSpeed: 0.27
+# TUNING BRUTAL: mesmo com 4 jogadores nv 15~25 a luta deve ser MUITO difícil.
+  # Wipe nas primeiras tentativas é o esperado — o boss é um "muro" que
+  # empurra o grupo a upar, explorar e voltar mais forte (filosofia Souls).
+  Health: 12000         # ~5 a 7 min de luta p/ grupo coordenado (principal knob de tuning)
+  Damage: 22            # dano do auto-attack melee da IA (dói até no tanque)
+  Armor: 16
+  MovementSpeed: 0.28
   Faction: Corrompidos  # mesma facção dos adds -> o boss nunca agride as próprias invocações
   BossBar:
     Enabled: true
@@ -44,7 +47,7 @@ GuardiaoCorrompido:
     ThreatTable: true         # aggro por ameaça -> um "tanque" consegue segurar o boss
   DamageModifiers:
     # Anti-cheese (Souls-like): o boss não morre para táticas degeneradas
-    - PROJECTILE 0.75         # ranged continua viável, mas não trivializa
+    - PROJECTILE 0.6          # ranged continua viável, mas não trivializa
     - FALL 0
     - DROWNING 0
     - SUFFOCATION 0
@@ -75,24 +78,27 @@ GuardiaoCorrompido:
     # ?!varequals{var=caster.ocupado;value=1} funciona como "GCD": o boss não
     # inicia um ataque grande enquanto outro cast está em andamento.
     # (a variável "ocupado" é setada com duration e expira sozinha)
-    - skill{s=GC_GolpePesado} @self ~onTimer:160 ?playerwithin{d=24} ?!varequals{var=caster.ocupado;value=1}
-    - skill{s=GC_ComboTriplo} @self ~onTimer:220 ?targetwithin{d=5} ?!varequals{var=caster.ocupado;value=1}
-    - skill{s=GC_Agarrao} @self ~onTimer:300 ?targetwithin{d=3} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_GolpePesado} @self ~onTimer:120 ?playerwithin{d=24} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ComboTriplo} @self ~onTimer:160 ?targetwithin{d=5} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_Agarrao} @self ~onTimer:240 ?targetwithin{d=3} ?!varequals{var=caster.ocupado;value=1}
+    # Represália: chance de contra-ataque instantâneo ao ser golpeado de perto.
+    # Pune quem só aperta botão colado no boss sem respeitar o moveset.
+    - skill{s=GC_Represalia} @self ~onDamaged 0.12 ?targetwithin{d=4} ?!varequals{var=caster.ocupado;value=1}
 
     # ---------------- FASE 1 ----------------
-    # Cap de 3 adds vivos: sem cap, grupos lentos afogam em Almas
-    - skill{s=GC_InvocarAlmas} @self ~onTimer:400 ?varequals{var=caster.fase;value=1} ?mobsinradius{types=AlmaCorrompida;amount=<4;radius=40}
+    # Cap de 4 adds vivos: sem cap, grupos lentos afogam em Almas
+    - skill{s=GC_InvocarAlmas} @self ~onTimer:340 ?varequals{var=caster.fase;value=1} ?mobsinradius{types=AlmaCorrompida;amount=<5;radius=40}
 
     # ---------------- FASE 2+ (fase != 1) ----------------
-    - skill{s=GC_ProjetilAlma} @self ~onTimer:200 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=30} ?!varequals{var=caster.ocupado;value=1}
-    - skill{s=GC_ErupcaoAlmas} @self ~onTimer:340 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=10} ?!varequals{var=caster.ocupado;value=1}
-    - skill{s=GC_RaioDoVeu} @self ~onTimer:460 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=40} ?!varequals{var=caster.ocupado;value=1}
-    - skill{s=GC_ChuvaDeAlmas} @self ~onTimer:520 ?varequals{var=caster.fase;value=2}
+    - skill{s=GC_ProjetilAlma} @self ~onTimer:160 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=30} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ErupcaoAlmas} @self ~onTimer:280 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=10} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_RaioDoVeu} @self ~onTimer:380 ?!varequals{var=caster.fase;value=1} ?playerwithin{d=40} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ChuvaDeAlmas} @self ~onTimer:400 ?varequals{var=caster.fase;value=2}
 
     # ---------------- FASE 3 ----------------
-    - skill{s=GC_ChuvaDeAlmas} @self ~onTimer:340 ?varequals{var=caster.fase;value=3}
-    - skill{s=GC_InvestidaFuriosa} @self ~onTimer:260 ?varequals{var=caster.fase;value=3} ?!varequals{var=caster.ocupado;value=1}
-    - skill{s=GC_TempestadeAlmas} @self ~onTimer:700 ?varequals{var=caster.fase;value=3} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_ChuvaDeAlmas} @self ~onTimer:240 ?varequals{var=caster.fase;value=3}
+    - skill{s=GC_InvestidaFuriosa} @self ~onTimer:200 ?varequals{var=caster.fase;value=3} ?!varequals{var=caster.ocupado;value=1}
+    - skill{s=GC_TempestadeAlmas} @self ~onTimer:600 ?varequals{var=caster.fase;value=3} ?!varequals{var=caster.ocupado;value=1}
 
     # ---------------- MORTE ----------------
     - skill{s=GC_Morte} @self ~onDeath
@@ -115,9 +121,9 @@ GuardiaoCorrompido:
 AlmaCorrompida:
   Type: ZOMBIE
   Display: '&7Alma Corrompida'
-  Health: 60
-  Damage: 7
-  MovementSpeed: 0.3
+  Health: 90
+  Damage: 10
+  MovementSpeed: 0.32
   Faction: Corrompidos
   Options:
     Silent: true
@@ -131,7 +137,7 @@ AlmaCorrompida:
     - clear
     - players
   Skills:
-    - potion{type=SLOWNESS;duration=40;level=1} @trigger ~onAttack
+    - potion{type=SLOWNESS;duration=60;level=1} @trigger ~onAttack
     - effect:particles{p=soul;amount=8;speed=0.05} @trigger ~onAttack
     - remove @self ~onSignal:GC_BOSS_MORTO
 
@@ -139,10 +145,10 @@ AlmaCorrompida:
 EcoGuardiao:
   Type: WITHER_SKELETON
   Display: '&5Eco do Guardião'
-  Health: 900
-  Damage: 12
-  Armor: 8
-  MovementSpeed: 0.3
+  Health: 1600
+  Damage: 18
+  Armor: 10
+  MovementSpeed: 0.31
   Faction: Corrompidos
   Options:
     Despawn: true
