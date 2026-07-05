@@ -1,0 +1,75 @@
+VorathDevoradorAlmas:
+  Type: WITHER_SKELETON
+  Display: '&5&lVorath, o Devorador de Almas'
+  Health: 85000
+  Damage: 28
+  Armor: 18
+  MovementSpeed: 0.28
+  Options:
+    Silent: false
+    PreventOtherDrops: true
+    PreventRandomEquipment: true
+    Despawn: false
+  AIGoalSelectors:
+    - 0 clear
+    - 1 meleeattack
+    - 2 lookatplayer
+  Skills:
+    # Fase 1 - Drenagem
+    - skill{s=DrenagemAlma} @target{r=4} ~onTimer:40
+    - skill{s=GolpePesado} @target{r=5} ~onTimer:60
+    # Fase 2 - Invocação
+    - skill{s=InvocarEcos} @self ~onHealth{health=70} 
+    # Fase 3 - Ultimate
+    - skill{s=DevorarVeu} @self ~onHealth{health=40}
+
+  Phases:
+    - health: 70
+      skills:
+        - message{m="&cO Véu começa a se abrir..."} @all ~onStart
+        - skill{s=InvocarEcos} @self
+    - health: 40
+      skills:
+        - message{m="&5O Devorador desperta seu domínio..."} @all ~onStart
+        - skill{s=CorromperArena} @self
+
+DrenagemAlma:
+  Skills:
+    - damage{amount=12;type=PHYSICAL} @target
+    - message{m="&dSuas almas são drenadas..."} @target
+    # Aqui podemos integrar com Skript para reduzir Almas temporariamente
+
+GolpePesado:
+  Skills:
+    - damage{amount=22;type=PHYSICAL} @target
+    - effect:particles{p=CRIT;amount=15} @target
+
+InvocarEcos:
+  Skills:
+    - summon{type=EcoDevorado;amount=3;radius=6} @self
+    - message{m="&7Ecos devorados surgem do Véu!"} @all
+
+DevorarVeu:
+  Skills:
+    - message{m="&5&lVorath canaliza o Véu... INTERROMPA!"} @all
+    - delay 120
+    - damage{amount=45;type=MAGIC;radius=12} @players{r=12}
+    # Idealmente integrado com Skript para drenar Almas em massa
+
+CorromperArena:
+  Skills:
+    - effect:particles{p=SOUL;amount=80;radius=15} @self
+    - message{m="&8O chão se corrompe..."} @all
+
+EcoDevorado:
+  Type: ZOMBIE
+  Display: '&7Eco Devorado'
+  Health: 2800
+  Damage: 14
+  Options:
+    PreventOtherDrops: true
+  Skills:
+    - skill{s=DrenarAlmaJogador} @target{r=3} ~onAttack
+    - death:dropitem{item=FragmentoVeuRasgado;amount=1;chance=0.4} @self
+
+# Nota: Integração completa com o sistema de Almas (Skript) deve ser feita manualmente após testes.
