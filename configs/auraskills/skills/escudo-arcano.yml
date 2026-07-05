@@ -1,0 +1,45 @@
+# ============================================
+# ESCUDO ARCANO - Skill Combinada
+# Escala com: Constituição + Inteligência
+# ============================================
+
+skill:
+  id: escudo-arcano
+  name: "&bEscudo Arcano"
+  description:
+    - "&7Cria um escudo mágico temporário."
+    - "&7Absorve dano e reflete parte do ataque."
+    - "&7Escala com Constituição (duração) + Inteligência (força do escudo)."
+
+  max-level: 15
+  enabled: true
+
+  mana-cost: "20 + (level * 2.5)"
+  cooldown: "(25 - (level * 0.8)) * 20"
+
+  triggers:
+    - type: right_click
+      conditions:
+        - type: has_item_in_hand
+          material: SHIELD, NETHERITE_SWORD
+
+  effects:
+    - type: potion_effect
+      effect: ABSORPTION
+      duration: "(level * 30) + 100"
+      amplifier: "1 + (player_intelligence * 0.08)"
+      target: self
+      
+    - type: damage
+      value: "player_intelligence * 1.8"
+      damage-type: MAGIC
+      chance: 35
+      target: attacker
+      message: "&bSeu Escudo Arcano refletiu o ataque!"
+
+  messages:
+    use: "&bVocê conjura um Escudo Arcano!"
+
+  requirements:
+    constitution: 15
+    intelligence: 10

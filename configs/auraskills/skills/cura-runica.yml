@@ -1,0 +1,43 @@
+# ============================================
+# CURA RÚNICA - Skill Combinada
+# Escala com: Sabedoria + Inteligência
+# ============================================
+
+skill:
+  id: cura-runica
+  name: "&aCura Rúnica"
+  description:
+    - "&7Cura a si mesmo com poder rúnico antigo."
+    - "&7Causa cura baseada em Sabedoria + Inteligência."
+    - "&7Adiciona um pequeno efeito de cura ao longo do tempo."
+
+  max-level: 15
+  enabled: true
+
+  mana-cost: "25 + (level * 3)"
+  cooldown: "(20 - (level * 0.6)) * 20"
+
+  triggers:
+    - type: right_click
+      conditions:
+        - type: has_item_in_hand
+          material: NETHERITE_SWORD, DIAMOND_SWORD, ENCHANTED_BOOK
+
+  effects:
+    - type: heal
+      value: "(player_wisdom * 3.5) + (player_intelligence * 2.8) + (level * 6)"
+      target: self
+      
+    - type: potion_effect
+      effect: REGENERATION
+      duration: "(level * 20) + 60"
+      amplifier: "1 + (player_wisdom * 0.06)"
+      target: self
+
+  messages:
+    use: "&aVocê canaliza Cura Rúnica!"
+    heal: "&aSua ferida se fecha com poder ancestral!"
+
+  requirements:
+    wisdom: 15
+    intelligence: 12
