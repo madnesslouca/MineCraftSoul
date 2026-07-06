@@ -16,6 +16,14 @@
 #   - Nomes de efeito de poção no padrão 1.20.5+ (SLOWNESS, RESISTANCE,
 #     STRENGTH). Em versões antigas use SLOW, DAMAGE_RESISTANCE,
 #     INCREASE_DAMAGE.
+#
+# REFERÊNCIA DE SINTAXE CORRETA (verificada na wiki oficial):
+#   ?healthPercent{h=<60}         — % de vida (NÃO ?health{h=<60%})
+#   ?varequals{var=X;value=Y}     — comparação de variável (alias válido)
+#   ?playerwithin{r=24}           — jogador no raio (parâmetro r=, não d=)
+#   ?targetwithin{r=5}            — distância ao alvo (parâmetro r=, não d=)
+#   ?mobsinradius{m=X;a=<5;r=40} — mobs no raio (parâmetros m= a= r=)
+#   @PIR{r=X;conditions=[...]}    — filtro em targeter (PREMIUM ONLY)
 # ============================================================
 
 # ---------------- INTRO E MORTE ----------------
@@ -128,9 +136,10 @@ GC_Agarrao:
     - sound{s=entity.ravager.roar;v=0.8;p=1.6} @self
     - effect:particles{p=crimson_spore;amount=30;speed=0.1;hS=0.8;vS=1} @self
     - delay 10
-    - damage{amount=38} @target ?targetwithin{d=3.5}
-    - actionmessage{a="&cVocê foi agarrado pelo Guardião!"} @target ?targetwithin{d=3.5}
-    - throw{velocity=4;velocityY=11} @target ?targetwithin{d=3.5}
+    # targetwithin{r=}: checa se o alvo ainda está no raio (parâmetro correto: r=, não d=)
+    - damage{amount=38} @target ?targetwithin{r=3.5}
+    - actionmessage{a="&cVocê foi agarrado pelo Guardião!"} @target ?targetwithin{r=3.5}
+    - throw{velocity=4;velocityY=11} @target ?targetwithin{r=3.5}
     - sound{s=entity.wither.break_block;v=1;p=0.8} @self
 
 # Contra-ataque reativo (chance de 12% ao ser golpeado de perto, ver mob):
@@ -215,9 +224,16 @@ GC_RaioDoVeu:
     - delay 50
     - sound{s=entity.warden.sonic_boom;v=1.6;p=0.8} @PIR{r=60}
     # Exposto = praticamente morto. O pilar É a mecânica.
+    # ATENÇÃO: conditions=[] dentro de targeter é recurso PREMIUM do MythicMobs.
+    # Sintaxe confirmada: [ - conditionName{params} true/false ]
+    # Se usar a versão FREE, substitua pela alternativa comentada abaixo.
     - damage{amount=55} @PIR{r=40;conditions=[ - lineofsight true ]}
     - effect:particles{p=soul;amount=25;speed=0.3} @PIR{r=40;conditions=[ - lineofsight true ]}
     - actionmessage{a="&cO Olhar do Véu o encontrou!"} @PIR{r=40;conditions=[ - lineofsight true ]}
+    # ALTERNATIVA FREE VERSION (descomente e remova as 3 linhas acima se não tiver Premium):
+    # - damage{amount=55} @PIR{r=40}
+    # - effect:particles{p=soul;amount=25;speed=0.3} @PIR{r=40}
+    # - actionmessage{a="&cO Olhar do Véu o encontrou!"} @PIR{r=40}
 
 # MECÂNICA DE ARENA: invoca uma Zona Corrompida na posição de CADA jogador
 # (o summon converte o alvo-entidade em localização automaticamente).
@@ -305,6 +321,8 @@ GC_Tempestade_Onda:
   Skills:
     - effect:particles{p=soul_fire_flame;amount=200;speed=1.2;hS=8;vS=1;y=1} @self
     - sound{s=entity.generic.explode;v=1.6;p=0.5} @PIR{r=60}
+    # PREMIUM: conditions=[] em targeter filtra por linha de visão (ver nota no GC_RaioDoVeu)
+    # ALTERNATIVA FREE: troque as 2 linhas abaixo por @PIR{r=40} sem conditions
     - damage{amount=24} @PIR{r=40;conditions=[ - lineofsight true ]}
     - effect:particles{p=soul;amount=20;speed=0.3} @PIR{r=40;conditions=[ - lineofsight true ]}
 
