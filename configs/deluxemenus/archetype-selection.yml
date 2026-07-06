@@ -1,0 +1,169 @@
+# ============================================
+# MENU: Escolha de Archetype - MineCraftSoul
+# ============================================
+menu:
+  title: '&8&lO Véu te Chama...'
+  size: 54
+  update_interval: 20
+
+items:
+  # ========== HEADER ==========
+  header:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 4
+    display_name: '&8&l━━━━━ &d&lARQUÉTIPOS &8&l━━━━━'
+    lore:
+      - '&7Escolha a origem da sua alma.'
+      - '&7Isso definirá sua identidade no mundo.'
+      - ''
+      - '&8Você poderá trocar depois pagando Almas.'
+
+  # ========== NASCIDO DO VÉU ==========
+  veilborn:
+    material: OBSIDIAN
+    slot: 19
+    display_name: '&5&lNascido do Véu'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Ser que nasceu diretamente da'
+      - '&7corrupção do Véu.'
+      - ''
+      - '&d&lBônus Passivo:'
+      - '&7• &a+12% &7de dano contra Corrompidos'
+      - ''
+      - '&d&lEfeito Especial:'
+      - '&7• 25% de chance de ganhar &b+1 Alma'
+      - '&7  ao matar um mob corrompido.'
+      - ''
+      - '&8[ Clique para escolher ]'
+    left_click_commands:
+      - '[player] archetype choose Veilborn'
+
+  # ========== ALMA CICATRIZADA ==========
+  soulscarred:
+    material: CRIMSON_HYPHAE
+    slot: 21
+    display_name: '&c&lAlma Cicatrizada'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Almas marcadas pela corrupção'
+      - '&7que aprenderam a transformar'
+      - '&7sua dor em força.'
+      - ''
+      - '&d&lBônus Passivo:'
+      - '&7• &c+8% &7de dano recebido'
+      - ''
+      - '&d&lEfeito Especial:'
+      - '&7• Abaixo de &c40% &7de vida:'
+      - '&7  &a+18% &7de dano total.'
+      - ''
+      - '&8[ Clique para escolher ]'
+    left_click_commands:
+      - '[player] archetype choose Soulscarred'
+
+  # ========== NASCIDO DO ECLIPSE ==========
+  eclipseborn:
+    material: PURPLE_CONCRETE
+    slot: 23
+    display_name: '&5&lNascido do Eclipse'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Nascidos no momento em que o'
+      - '&7grande Eclipse rasgou o Véu.'
+      - ''
+      - '&d&lBônus Passivo:'
+      - '&7• &d+10% &7de Inteligência'
+      - ''
+      - '&d&lEfeito Especial:'
+      - '&7• Skills de dano mágico têm'
+      - '&7  &a+10% &7de chance de crítico.'
+      - ''
+      - '&8[ Clique para escolher ]'
+    left_click_commands:
+      - '[player] archetype choose Eclipseborn'
+
+  # ========== GUARDIÃO OCO ==========
+  hollow_warden:
+    material: IRON_BLOCK
+    slot: 28
+    display_name: '&7&lGuardião Oco'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Antigos guardiões que tiveram'
+      - '&7parte de sua alma consumida.'
+      - ''
+      - '&d&lBônus Passivo:'
+      - '&7• &a+15% &7de vida máxima'
+      - ''
+      - '&d&lEfeito Especial:'
+      - '&7• Abaixo de &c30% &7de vida:'
+      - '&7  Ganha escudo de &a25% &7da vida máx.'
+      - '&7  (Cooldown: 90s)'
+      - ''
+      - '&8[ Clique para escolher ]'
+    left_click_commands:
+      - '[player] archetype choose HollowWarden'
+
+  # ========== ANDARILHO DA FENDA ==========
+  riftwalker:
+    material: ENDER_PEARL
+    slot: 30
+    display_name: '&d&lAndarilho da Fenda'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Aqueles que aprenderam a'
+      - '&7caminhar entre as fendas do Véu.'
+      - ''
+      - '&d&lBônus Passivo:'
+      - '&7• &a+12% &7de velocidade de movimento'
+      - ''
+      - '&d&lEfeito Especial:'
+      - '&7• Após matar um inimigo:'
+      - '&7  Fica invisível por &a4 segundos'
+      - '&7  (Cooldown: 50s)'
+      - ''
+      - '&8[ Clique para escolher ]'
+    left_click_commands:
+      - '[player] archetype choose Riftwalker'
+
+  # ========== ATADO ÀS CINZAS ==========
+  ashenbound:
+    material: BONE_BLOCK
+    slot: 32
+    display_name: '&f&lAtado às Cinzas'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Almas ligadas aos restos'
+      - '&7dos que foram consumidos.'
+      - ''
+      - '&d&lBônus Passivo:'
+      - '&7• &d+10% &7de Sabedoria'
+      - ''
+      - '&d&lEfeito Especial:'
+      - '&7• Ao recuperar um Eco da Alma:'
+      - '&7  Ganha &a+30% &7mais Almas.'
+      - ''
+      - '&8[ Clique para escolher ]'
+    left_click_commands:
+      - '[player] archetype choose Ashenbound'
+
+  # ========== INFORMAÇÃO ATUAL ==========
+  current_archetype:
+    material: NETHER_STAR
+    slot: 49
+    display_name: '&e&lSeu Archetype Atual'
+    lore:
+      - '&7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+      - '&7Atualmente: &f%player_archetype%'
+      - ''
+      - '&8Você pode trocar pagando &b100 Almas&8.'
+
+  # ========== FECHAR ==========
+  close:
+    material: BARRIER
+    slot: 53
+    display_name: '&c&lFechar'
+    lore:
+      - '&7Clique para fechar o menu.'
+    left_click_commands:
+      - '[close]'

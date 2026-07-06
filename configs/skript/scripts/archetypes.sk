@@ -1,0 +1,106 @@
+# =====================================================
+# SISTEMA DE ARCHETYPES - MineCraftSoul
+# =====================================================
+# Autor: Grok + Claude
+# Versão: 1.0
+
+options:
+    prefix: &8[&5Archetype&8]
+    menu: archetype-selection
+
+# =====================================================
+# COMANDOS
+# =====================================================
+
+command /archetypes:
+    description: Abre o menu de escolha de Archetype
+    trigger:
+        open {@menu} to player
+
+command /archetype:
+    description: Mostra seu Archetype atual
+    trigger:
+        if {archetype::%player's uuid%} is set:
+            send "{@prefix} Seu Archetype atual é: &d%{archetype::%player's uuid%}%"
+        else:
+            send "{@prefix} Você ainda não escolheu um Archetype. Use &f/archetypes&8."
+
+# Comando chamado pelo menu do DeluxeMenus
+command /archetype choose <text>:
+    permission: archetypes.choose
+    trigger:
+        set {archetype::%player's uuid%} to arg-1
+        send "{@prefix} Você escolheu o Archetype &d%arg-1%&8."
+        send "{@prefix} Seus bônus passivos já estão ativos."
+        play sound "entity.player.levelup" with volume 0.8 and pitch 1.2 to player
+
+# =====================================================
+# EVENTOS E EFEITOS
+# =====================================================
+
+# ========== NASCIDO DO VÉU (Veilborn) ==========
+# +12% dano contra Corrompidos + chance de Alma extra
+on damage of entity:
+    if {archetype::%attacker's uuid%} is "Nascido do Véu" or "Veilborn":
+        if entity's name contains "Corrompido" or entity's name contains "Corrupted":
+            add 12% to damage
+
+on death of entity:
+    if {archetype::%attacker's uuid%} is "Nascido do Véu" or "Veilborn":
+        if entity's name contains "Corrompido" or entity's name contains "Corrupted":
+            chance of 25%:
+                add 1 to {almas::%attacker's uuid%}
+                send actionbar "&b+1 Alma extra (Nascido do Véu)" to attacker
+
+# ========== ALMA CICATRIZADA (Soulscarred) ==========
+# +18% de dano quando abaixo de 40% de vida
+on damage of entity:
+    if {archetype::%attacker's uuid%} is "Alma Cicatrizada" or "Soulscarred":
+        if attacker's health / attacker's max health <= 0.40:
+            add 18% to damage
+
+# ========== NASCIDO DO ECLIPSE (Eclipseborn) ==========
+# +10% de chance de crítico em dano mágico (simplificado)
+on damage of entity:
+    if {archetype::%attacker's uuid%} is "Nascido do Eclipse" or "Eclipseborn":
+        if damage cause is magic or projectile:
+            chance of 10%:
+                add 50% to damage
+                send actionbar "&d&lCRÍTICO MÁGICO!" to attacker
+
+# ========== GUARDIÃO OCO (Hollow Warden) ==========
+# Escudo quando cai abaixo de 30% de vida
+on damage of player:
+    if {archetype::%victim's uuid%} is "Guardião Oco" or "Hollow Warden":
+        if victim's health / victim's max health <= 0.30:
+            if {cooldown::shield::%victim's uuid%} is not set or {cooldown::shield::%victim's uuid%} <= now:
+                set {cooldown::shield::%victim's uuid%} to now + 90 seconds
+                add 25% of victim's max health to victim's health
+                send actionbar "&a&lEscudo do Guardião ativado!" to victim
+                play sound "entity.illusioner.mirror_move" with volume 1.0 and pitch 0.8 to victim
+
+# ========== ANDARILHO DA FENDA (Riftwalker) ==========
+# Invisibilidade após matar um inimigo
+on death of entity:
+    if {archetype::%attacker's uuid%} is "Andarilho da Fenda" or "Riftwalker":
+        if {cooldown::invis::%attacker's uuid%} is not set or {cooldown::invis::%attacker's uuid%} <= now:
+            set {cooldown::invis::%attacker's uuid%} to now + 50 seconds
+            apply invisibility to attacker for 4 seconds
+            send actionbar "&d&lVocê se tornou invisível!" to attacker
+
+# =====================================================
+# FUNÇÕES AUXILIARES
+# =====================================================
+
+function archetypeOf(p: player) :: text:
+    return {archetype::%{_p}'s uuid%} if {archetype::%{_p}'s uuid%} is set, else "Nenhum"
+
+# =====================================================
+# MENSAGEM DE BOAS-VINDAS (opcional)
+# =====================================================
+
+on join:
+    wait 3 seconds
+    if {archetype::%player's uuid%} is not set:
+        send "{@prefix} &7Você ainda não escolheu seu Archetype."
+        send "{@prefix} &7Use &f/archetypes &7para escolher."
