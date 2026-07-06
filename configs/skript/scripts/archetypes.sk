@@ -2,7 +2,7 @@
 # SISTEMA DE ARCHETYPES - MineCraftSoul
 # =====================================================
 # Autor: Grok + Claude
-# Versão: 1.0
+# Versão: 1.1 (AuthMe Integration)
 
 options:
     prefix: &8[&5Archetype&8]
@@ -15,6 +15,13 @@ options:
 command /archetypes:
     description: Abre o menu de escolha de Archetype
     trigger:
+        # Verifica se o jogador está logado no AuthMe
+        if player is not authenticated:
+            send "&c&l[AuthMe] &cVocê precisa estar logado para acessar este menu."
+            send "&7Use &f/login <sua senha> &7para continuar."
+            stop
+        
+        # Se estiver logado, abre o menu normalmente
         open {@menu} to player
 
 command /archetype:
@@ -29,6 +36,10 @@ command /archetype:
 command /archetype choose <text>:
     permission: archetypes.choose
     trigger:
+        if player is not authenticated:
+            send "&cVocê precisa estar logado para escolher um Archetype."
+            stop
+        
         set {archetype::%player's uuid%} to arg-1
         send "{@prefix} Você escolheu o Archetype &d%arg-1%&8."
         send "{@prefix} Seus bônus passivos já estão ativos."
