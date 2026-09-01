@@ -1,22 +1,43 @@
 # =====================================================
 # SISTEMA DE ARCHETYPES - MineCraftSoul
 # =====================================================
-# Versão: 2.1 (sintaxe corrigida + integração AuthMe)
+# Versão: 3.0 (sintaxe verificada contra a documentação oficial do Skript)
 #
-# Dependências:
-#   - Skript 2.6+
-#   - AuthMe + AuthMe-Skript (para "on authme player login"
-#     e "player is logged" / "player is authenticated")
-#   - SkQuery ou TuSKe (para abrir GUI com "open ... to player")
-#   - O arquivo de GUI do menu deve estar em:
-#       configs/skript/scripts/archetypes-menu.sk
-#   - A variável {almas::UUID} deve bater com soul-economy.sk
+# ---------------------------------------------------------------------
+# DEPENDÊNCIAS
+# ---------------------------------------------------------------------
+#   OBRIGATÓRIO : Skript 2.6+
+#   OPCIONAL    : addon AuthMe-Skript (APENAS para o menu automático —
+#                 ver seção "PRIMEIRO LOGIN" abaixo)
+#   OPCIONAL    : SkQuery / TuSKe (para o GUI "open ... to player")
 #
-# SOBRE O MENU ({@menu}):
-#   A opção define apenas o ID do inventário/GUI.
-#   O inventário "archetype-selection" precisa estar definido
-#   no arquivo archetypes-menu.sk usando o addon de GUI do projeto
-#   (SkQuery, TuSKe, etc.).
+#   O menu {@menu} precisa ser definido em arquivo separado:
+#     configs/skript/scripts/archetypes-menu.sk
+#   Enquanto ele não existir, /archetypes não renderiza nada.
+#
+#   A variável {almas::UUID} deve bater com soul-economy.sk / forja-almas.sk
+#
+# ---------------------------------------------------------------------
+# NOTAS DE SINTAXE (verificadas na doc oficial)
+# ---------------------------------------------------------------------
+#   - Em eventos de dano/morte as expressões corretas são "victim" e
+#     "attacker". NÃO usar "entity" (retorna o tipo, não o alvo do evento).
+#   - "damage" é a expressão documentada para modificar o dano.
+#     Em Skript, damage 1 = UM CORAÇÃO CHEIO (não meio coração).
+#     Usamos multiplicação (damage * 1.12), que é imune a essa unidade.
+#   - "chance of X%:" é usado como linha de condição própria, sem "if".
+#   - Cooldown por data: "set {cd} to X seconds from now" e testar
+#     "if {cd} is greater than now" (= ainda em cooldown).
+#   - "apply <efeito> to <alvo> for <tempo>" é a forma correta
+#     (NÃO "apply potion of <efeito>").
+#
+# ---------------------------------------------------------------------
+# AVISO CONHECIDO DO SKRIPT (issue SkriptLang #7728)
+# ---------------------------------------------------------------------
+#   Modificar "damage" dentro de "on damage" pode reentrar no evento
+#   quando o valor final fica abaixo de 2. Testar em servidor: se um
+#   bônus aplicar duas vezes, adicionar um guard de flag por tick.
+# =====================================================
 
 options:
     prefix: &8[&5Soul&8] &r
@@ -25,145 +46,155 @@ options:
 # =====================================================
 # COMANDOS
 # =====================================================
+# NOTA: não há checagem manual de login aqui de propósito.
+# O próprio AuthMe já bloqueia comandos antes da autenticação
+# (config "allowCommands"). Duplicar isso no Skript exigiria um addon
+# cuja sintaxe varia entre versões — dependência frágil e desnecessária.
 
 command /archetypes:
     description: Abre o menu de escolha de Archetype
     trigger:
-        # "player is logged" requer AuthMe-Skript addon
-        if player is not logged:
-            send "&c&l[AuthMe] &cVocê precisa estar logado para acessar este menu."
-            send "&7Use &f/login <sua senha> &7para continuar."
-            stop
         open {@menu} to player
 
 command /archetype:
     description: Mostra seu Archetype atual
     trigger:
-        if player is not logged:
-            send "&cVocê precisa estar logado para usar este comando."
-            stop
         set {_arch} to {archetype::%player's uuid%}
         if {_arch} is set:
             send "{@prefix}Seu Archetype atual é: &d%{_arch}%"
         else:
             send "{@prefix}Você ainda não escolheu um Archetype. Use &f/archetypes&8."
 
-# /archetype choose é apenas um fallback de admin (o fluxo normal é pelo menu).
-# Permissão: archetypes.choose (conceda apenas a admins ou via menu)
+# Fallback administrativo — o fluxo normal do jogador é pelo menu.
 command /archetype choose <text>:
     permission: archetypes.choose
     trigger:
-        if player is not logged:
-            send "&cVocê precisa estar logado."
-            stop
         set {archetype::%player's uuid%} to arg-1
         send "{@prefix}Archetype definido para &d%arg-1%&8."
         send "{@prefix}Seus bônus passivos já estão ativos."
         play sound "entity.player.levelup" with volume 0.8 and pitch 1.2 to player
 
 # =====================================================
-# EVENTO: Abrir menu automaticamente no primeiro login
+# PRIMEIRO LOGIN: abre o menu automaticamente
 # =====================================================
+# ATENÇÃO: "on authme player login" depende do addon AuthMe-Skript e a
+# sintaxe varia conforme o addon instalado. Se o console acusar erro de
+# parse nesta linha, comente este bloco inteiro e use a alternativa
+# "on join" logo abaixo (menos precisa: dispara antes do /login, por isso
+# o delay maior).
+
 on authme player login:
     wait 3 seconds
-    if {archetype::%player's uuid%} is not set:
-        send "&5&l━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" to player
-        send "&d&lBem-vindo ao MineCraftSoul!" to player
-        send "&7Como é sua primeira vez aqui, você precisa" to player
-        send "&7escolher seu &5Archetype&7 (origem da sua alma)." to player
-        send "&5&l━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" to player
-        wait 1 second
-        open {@menu} to player
-        # sintaxe correta: "send action bar" (com espaço)
-        send action bar "&7Use &f/archetypes &7a qualquer momento." to player
+    if player is online:
+        if {archetype::%player's uuid%} is not set:
+            makeArchetypeWelcome(player)
+
+# ---- ALTERNATIVA SEM ADDON (descomente se o bloco acima falhar) ------
+# on join:
+#     wait 15 seconds
+#     if player is online:
+#         if {archetype::%player's uuid%} is not set:
+#             makeArchetypeWelcome(player)
 
 # =====================================================
-# EFEITOS DOS ARCHETYPES
+# EFEITOS DOS ARCHETYPES — DANO CAUSADO
 # =====================================================
-# Todos os eventos de dano consolidados em um único handler para evitar
-# interferência e garantir que "attacker" está disponível e é um jogador.
+# Handler único: evita que múltiplos "on damage" separados briguem entre si.
 
-on damage of entity:
-    # Guarda em variáveis locais para evitar repetição e aritmética em condição
-    set {_atk} to attacker
-    if {_atk} is not a player:
-        stop
-    set {_arch} to {archetype::%{_atk}'s uuid%}
-    if {_arch} is not set:
-        stop
+on damage:
+    # attacker pode ser bloco, fogo, queda ou nada — filtrar antes de tudo
+    attacker is a player
+    set {_arch} to {archetype::%attacker's uuid%}
+    {_arch} is set
 
-    # ── Nascido do Véu: +12% de dano contra mobs Corrompidos ──────────────
+    # ── Nascido do Véu: +12% de dano contra Corrompidos ────────────────
     if {_arch} is "Nascido do Véu" or {_arch} is "Veilborn":
-        # MythicMobs usa custom name — entity's name retorna o tipo, não o display
-        if entity's custom name contains "Corrompido" or entity's custom name contains "Corrupted":
-            set event-damage to event-damage * 1.12
+        # MythicMobs define o nome exibido como CUSTOM NAME do victim
+        if victim's custom name contains "Corrompido" or victim's custom name contains "Corrupted":
+            set damage to damage * 1.12
 
-    # ── Alma Cicatrizada: +18% de dano quando abaixo de 40% de vida ────────
+    # ── Alma Cicatrizada: +18% de dano abaixo de 40% de vida ───────────
     if {_arch} is "Alma Cicatrizada" or {_arch} is "Soulscarred":
-        # Aritmética em condição não funciona em Skript: usar variável temporária
-        set {_ratio} to {_atk}'s health / {_atk}'s max health
+        # Aritmética precisa sair da condição para uma variável local
+        set {_ratio} to attacker's health / attacker's max health
         if {_ratio} <= 0.40:
-            set event-damage to event-damage * 1.18
+            set damage to damage * 1.18
 
-    # ── Nascido do Eclipse: 10% chance de crítico mágico (+50% de dano) ───
+    # ── Nascido do Eclipse: 10% de crítico mágico (+50%) ───────────────
     if {_arch} is "Nascido do Eclipse" or {_arch} is "Eclipseborn":
-        # damage cause: tipo DamageCause do Bukkit (magic = feitiço, projectile = projétil)
         if damage cause is magic or damage cause is projectile:
-            if chance of 10%:
-                set event-damage to event-damage * 1.5
-                send action bar "&d&lCRÍTICO MÁGICO!" to {_atk}
+            chance of 10%:
+                set damage to damage * 1.5
+                send action bar "&d&lCRÍTICO MÁGICO!" to attacker
 
-# Evento de dano recebido por jogador (separado: usa victim, não attacker)
+# =====================================================
+# EFEITOS DOS ARCHETYPES — DANO RECEBIDO
+# =====================================================
+
 on damage of player:
     set {_arch} to {archetype::%victim's uuid%}
-    if {_arch} is not set:
-        stop
+    {_arch} is set
 
-    # ── Guardião Oco: escudo de 25% da vida máx ao cair abaixo de 30% ─────
+    # ── Guardião Oco: cura de emergência abaixo de 30% de vida ─────────
     if {_arch} is "Guardião Oco" or {_arch} is "Hollow Warden":
         set {_ratio} to victim's health / victim's max health
         if {_ratio} <= 0.30:
-            # Verifica cooldown manualmente (Skript não tem cooldown nativo por variável de tempo)
             set {_cd} to {cooldown::shield::%victim's uuid%}
-            if {_cd} is not set or now is after {_cd}:
-                set {cooldown::shield::%victim's uuid%} to now + 90 seconds
+            # "{_cd} is greater than now" = AINDA em cooldown -> não ativa
+            if {_cd} is not set or {_cd} is not greater than now:
+                set {cooldown::shield::%victim's uuid%} to 90 seconds from now
+                # NOTA DE DESIGN: isto é cura, não escudo de absorção.
+                # Se o seu Skript expõe a expressão "absorption", trocar por
+                # absorção deixa mais fiel ao doc ("escudo").
                 heal victim by (25% of victim's max health)
-                send action bar "&a&lEscudo do Guardião ativado! &7(CD: 90s)" to victim
-                play sound "entity.illusioner.mirror_move" with volume 1.0 and pitch 0.8 to victim
+                send action bar "&a&lEscudo do Guardião ativado! &7(CD 90s)" to victim
+                play sound "entity.illusioner.mirror_move" with volume 1 and pitch 0.8 to victim
 
-# Evento de morte de entidade (para drops de Alma e invisibilidade)
-on death of entity:
-    set {_atk} to attacker
-    if {_atk} is not a player:
-        stop
-    set {_arch} to {archetype::%{_atk}'s uuid%}
-    if {_arch} is not set:
-        stop
+# =====================================================
+# EFEITOS DOS ARCHETYPES — AO MATAR
+# =====================================================
 
-    # ── Nascido do Véu: 25% de chance de +1 Alma ao matar mob Corrompido ──
+on death:
+    attacker is a player
+    set {_arch} to {archetype::%attacker's uuid%}
+    {_arch} is set
+
+    # ── Nascido do Véu: 25% de chance de +1 Alma em Corrompidos ────────
     if {_arch} is "Nascido do Véu" or {_arch} is "Veilborn":
-        if entity's custom name contains "Corrompido" or entity's custom name contains "Corrupted":
-            if chance of 25%:
-                add 1 to {almas::%{_atk}'s uuid%}
-                send action bar "&b+1 Alma extra &8(Nascido do Véu)" to {_atk}
+        if victim's custom name contains "Corrompido" or victim's custom name contains "Corrupted":
+            chance of 25%:
+                add 1 to {almas::%attacker's uuid%}
+                send action bar "&b+1 Alma extra &8(Nascido do Véu)" to attacker
 
-    # ── Andarilho da Fenda: invisibilidade 4s após matar (CD: 50s) ─────────
+    # ── Andarilho da Fenda: invisibilidade 4s ao matar (CD 50s) ────────
     if {_arch} is "Andarilho da Fenda" or {_arch} is "Riftwalker":
-        set {_cd} to {cooldown::invis::%{_atk}'s uuid%}
-        if {_cd} is not set or now is after {_cd}:
-            set {cooldown::invis::%{_atk}'s uuid%} to now + 50 seconds
-            # sintaxe correta: "apply potion of X to Y for Z seconds"
-            apply potion of invisibility to {_atk} for 4 seconds
-            send action bar "&d&lInvisível! &8(CD: 50s)" to {_atk}
+        set {_cd} to {cooldown::invis::%attacker's uuid%}
+        if {_cd} is not set or {_cd} is not greater than now:
+            set {cooldown::invis::%attacker's uuid%} to 50 seconds from now
+            apply invisibility to attacker for 4 seconds
+            send action bar "&d&lInvisível! &8(CD 50s)" to attacker
 
 # =====================================================
-# FUNÇÕES UTILITÁRIAS
+# FUNÇÕES
 # =====================================================
 
-# Retorna o Archetype do jogador ou "Nenhum" se não tiver escolhido.
+# Mensagem de boas-vindas + abertura do menu (usada pelos dois caminhos
+# de primeiro login, para não duplicar o texto).
+function makeArchetypeWelcome(p: player):
+    send "&5&l━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" to {_p}
+    send "&d&lBem-vindo ao MineCraftSoul!" to {_p}
+    send "&7Como é sua primeira vez aqui, você precisa" to {_p}
+    send "&7escolher seu &5Archetype&7 (origem da sua alma)." to {_p}
+    send "&5&l━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" to {_p}
+    wait 1 second
+    if {_p} is online:
+        open {@menu} to {_p}
+        send action bar "&7Use &f/archetypes &7a qualquer momento." to {_p}
+
+# Retorna o Archetype do jogador ou "Nenhum".
 # Uso: set {_arch} to archetypeOf(player)
 function archetypeOf(p: player) :: text:
-    # Ternário inline não existe em Skript — usar if/return
+    # Skript não tem ternário inline — precisa de if/return separados
     if {archetype::%{_p}'s uuid%} is set:
         return {archetype::%{_p}'s uuid%}
     return "Nenhum"
