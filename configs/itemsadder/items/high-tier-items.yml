@@ -1,5 +1,5 @@
 info:
-  namespace: minecraf tsoul
+  namespace: minecraftsoul
   version: "1.0"
 
 items:
@@ -35,7 +35,7 @@ items:
       shapeless:
         - result_amount: 1
           ingredients:
-            - minecraf tsoul:fragmento_veu_rasgado * 5
+            - minecraftsoul:fragmento_veu_rasgado * 5
 
   peitoral_eco_eterno:
     display_name: "&2&lPeitoral do Eco Eterno"
@@ -69,7 +69,7 @@ items:
             - "F C F"
             - "F F F"
           ingredients:
-            F: minecraf tsoul:fragmento_veu_rasgado
+            F: minecraftsoul:fragmento_veu_rasgado
             C: NETHERITE_CHESTPLATE
 
   talisma_alma_livre:
@@ -91,5 +91,5 @@ items:
       shapeless:
         - result_amount: 1
           ingredients:
-            - minecraf tsoul:fragmento_veu_rasgado * 3
+            - minecraftsoul:fragmento_veu_rasgado * 3
             - NETHER_STAR * 1
