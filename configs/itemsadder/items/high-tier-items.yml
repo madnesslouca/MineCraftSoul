@@ -23,8 +23,11 @@ items:
       - "&7Dano Mágico Adicional: &d+6"
       - "&7Chance de Queimadura de Alma: &c28%"
       - "&8(Escala com Força + Inteligência)"
+    # attribute_modifiers exige aninhamento por SLOT com nomes camelCase
+    # (mainhand/offhand/head/chest/legs/feet) — não os enums GENERIC_*
     attribute_modifiers:
-      GENERIC_ATTACK_DAMAGE: 14
+      mainhand:
+        attackDamage: 14
     enchants:
       sharpness: 5
       fire_aspect: 2
@@ -53,9 +56,10 @@ items:
       - "&7Regeneração de Vida em Combate: &a+2.5 por segundo"
       - "&8(Escala com Constituição + Sabedoria)"
     attribute_modifiers:
-      GENERIC_ARMOR: 10
-      GENERIC_ARMOR_TOUGHNESS: 4
-      GENERIC_MAX_HEALTH: 13  # +65 vida (5 corações)
+      chest:
+        armor: 10
+        armorToughness: 4
+        maxHealth: 13  # +65 vida (5 corações)
     enchants:
       protection: 5
       unbreaking: 4

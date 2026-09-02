@@ -70,6 +70,6 @@ EcoDevorado:
     PreventOtherDrops: true
   Skills:
     - skill{s=DrenarAlmaJogador} @target{r=3} ~onAttack
-    - death:dropitem{item=FragmentoVeuRasgado;amount=1;chance=0.4} @self
+    - death:dropitem{item=minecraftsoul:fragmento_veu_rasgado;amount=1;chance=0.4} @self
 
 # Nota: Integração completa com o sistema de Almas (Skript) deve ser feita manualmente após testes.

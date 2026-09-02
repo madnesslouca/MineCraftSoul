@@ -109,10 +109,10 @@ GuardiaoCorrompido:
   Drops:
     # Sintaxe MythicMobs: <drop> <quantidade> <chance>
     # Ajuste o namespace/case dos itens para o do pack final do ItemsAdder.
-    - itemsadder{item=minecraftsoul:LaminaVeuCorrompido} 1 0.35
-    - itemsadder{item=minecraftsoul:ElmoGuardiaoCorrompido} 1 0.40
-    - itemsadder{item=minecraftsoul:AnelAlmaPresa} 1 0.25
-    - itemsadder{item=minecraftsoul:FragmentoVeuRasgado} 1to3 0.80
+    - itemsadder{item=minecraftsoul:lamina_veu_corrompido} 1 0.35
+    - itemsadder{item=minecraftsoul:elmo_guardiao_corrompido} 1 0.40
+    - itemsadder{item=minecraftsoul:anel_alma_presa} 1 0.25
+    - itemsadder{item=minecraftsoul:fragmento_veu_rasgado} 1to3 0.80
     - exp 350 1
 
 # ============================================================
